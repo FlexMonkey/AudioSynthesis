@@ -8,18 +8,27 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController
+{
 
-    override func viewDidLoad() {
+    let toneWidget = ToneWidget(frame: CGRectZero)
+    
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        view.addSubview(toneWidget)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewDidLayoutSubviews()
+    {
+        toneWidget.frame = CGRect(x: topLayoutGuide.length, y: topLayoutGuide.length, width: 250, height: 500)
     }
-
+    
+    override func supportedInterfaceOrientations() -> Int
+    {
+        return Int(UIInterfaceOrientationMask.Landscape.toRaw())
+    }
 
 }
 

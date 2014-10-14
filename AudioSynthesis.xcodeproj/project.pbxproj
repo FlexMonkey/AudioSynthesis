@@ -13,6 +13,10 @@
 		BE3DF0FA19ECDBA70063C950 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE3DF0F919ECDBA70063C950 /* Images.xcassets */; };
 		BE3DF0FD19ECDBA70063C950 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE3DF0FB19ECDBA70063C950 /* LaunchScreen.xib */; };
 		BE3DF10919ECDBA70063C950 /* AudioSynthesisTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3DF10819ECDBA70063C950 /* AudioSynthesisTests.swift */; };
+		BE3DF11419ECDC160063C950 /* ToneWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3DF11319ECDC160063C950 /* ToneWidget.swift */; };
+		BE3DF11B19ECDC4E0063C950 /* NumericDial.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3DF11719ECDC4E0063C950 /* NumericDial.swift */; };
+		BE3DF11C19ECDC4E0063C950 /* NumericDialBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3DF11819ECDC4E0063C950 /* NumericDialBackground.swift */; };
+		BE3DF11D19ECDC4E0063C950 /* NumericDialTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3DF11919ECDC4E0063C950 /* NumericDialTrack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +40,10 @@
 		BE3DF10219ECDBA70063C950 /* AudioSynthesisTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AudioSynthesisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3DF10719ECDBA70063C950 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE3DF10819ECDBA70063C950 /* AudioSynthesisTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSynthesisTests.swift; sourceTree = "<group>"; };
+		BE3DF11319ECDC160063C950 /* ToneWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToneWidget.swift; sourceTree = "<group>"; };
+		BE3DF11719ECDC4E0063C950 /* NumericDial.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumericDial.swift; sourceTree = "<group>"; };
+		BE3DF11819ECDC4E0063C950 /* NumericDialBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumericDialBackground.swift; sourceTree = "<group>"; };
+		BE3DF11919ECDC4E0063C950 /* NumericDialTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumericDialTrack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +85,8 @@
 		BE3DF0EF19ECDBA70063C950 /* AudioSynthesis */ = {
 			isa = PBXGroup;
 			children = (
+				BE3DF11519ECDC1E0063C950 /* numericDial */,
+				BE3DF11219ECDBF50063C950 /* widgets */,
 				BE3DF0F219ECDBA70063C950 /* AppDelegate.swift */,
 				BE3DF0F419ECDBA70063C950 /* ViewController.swift */,
 				BE3DF0F619ECDBA70063C950 /* Main.storyboard */,
@@ -110,6 +120,24 @@
 				BE3DF10719ECDBA70063C950 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BE3DF11219ECDBF50063C950 /* widgets */ = {
+			isa = PBXGroup;
+			children = (
+				BE3DF11319ECDC160063C950 /* ToneWidget.swift */,
+			);
+			name = widgets;
+			sourceTree = "<group>";
+		};
+		BE3DF11519ECDC1E0063C950 /* numericDial */ = {
+			isa = PBXGroup;
+			children = (
+				BE3DF11719ECDC4E0063C950 /* NumericDial.swift */,
+				BE3DF11819ECDC4E0063C950 /* NumericDialBackground.swift */,
+				BE3DF11919ECDC4E0063C950 /* NumericDialTrack.swift */,
+			);
+			name = numericDial;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -213,7 +241,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE3DF0F519ECDBA70063C950 /* ViewController.swift in Sources */,
+				BE3DF11D19ECDC4E0063C950 /* NumericDialTrack.swift in Sources */,
+				BE3DF11C19ECDC4E0063C950 /* NumericDialBackground.swift in Sources */,
+				BE3DF11B19ECDC4E0063C950 /* NumericDial.swift in Sources */,
 				BE3DF0F319ECDBA70063C950 /* AppDelegate.swift in Sources */,
+				BE3DF11419ECDC160063C950 /* ToneWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
