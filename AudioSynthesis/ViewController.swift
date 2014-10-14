@@ -22,7 +22,7 @@ class ViewController: UIViewController
 
     override func viewDidLayoutSubviews()
     {
-        toneWidget.frame = CGRect(x: topLayoutGuide.length, y: topLayoutGuide.length, width: 250, height: 500)
+        toneWidget.frame = CGRect(x: topLayoutGuide.length, y: topLayoutGuide.length, width: 250, height: 625)
     }
     
     override func supportedInterfaceOrientations() -> Int
