@@ -44,7 +44,9 @@ class ViewController: UIViewController
     
     override func viewDidLayoutSubviews()
     {
-        sineWaveRenderer.frame = CGRect(x: Int(view.frame.width / 2) - Constants.width / 2, y: Int(topLayoutGuide.length), width: Constants.width, height: 125)
+        let sineWaveRendererWidth = Int(view.frame.width - 40)
+        
+        sineWaveRenderer.frame = CGRect(x: Int(view.frame.width / 2) - sineWaveRendererWidth / 2, y: Int(topLayoutGuide.length), width: sineWaveRendererWidth, height: 125)
         
         let columWidth = view.frame.width / 4
         let targetY = view.frame.height - 625 + topLayoutGuide.length
@@ -55,6 +57,8 @@ class ViewController: UIViewController
             
             toneWidget.frame = CGRect(x: targetX, y: targetY, width: CGFloat(Constants.width), height: 625)
         }
+        
+        toneWidgetChangeHandler()
     }
     
     override func supportedInterfaceOrientations() -> Int

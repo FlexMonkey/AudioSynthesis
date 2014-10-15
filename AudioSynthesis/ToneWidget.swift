@@ -45,8 +45,6 @@ class ToneWidget: UIControl
     {
         sineWaveRenderer.setFrequencyVelocityPairs([getFrequencyVelocityPair()])
         
-        // sineWaveRenderer.setValues(frequency: toneDial.currentValue, velocity: velocityDial.currentValue)
-        
         sendActionsForControlEvents(UIControlEvents.ValueChanged)
     }
     
@@ -58,6 +56,8 @@ class ToneWidget: UIControl
         
         toneDial.labelFunction = labelFunction("Tone")
         velocityDial.labelFunction = labelFunction("Velocity")
+        
+        sineWaveRenderer.setFrequencyVelocityPairs([getFrequencyVelocityPair()])
     }
     
     func labelFunction(label: String) -> ((Double) -> String)

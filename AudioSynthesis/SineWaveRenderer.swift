@@ -10,13 +10,15 @@ import UIKit
 
 class SineWaveRenderer: UIControl
 {
-    let WIDTH = Constants.width
-    let HEIGHT = 125
+    // let WIDTH = Constants.width
+    // let HEIGHT = 125
     
-    let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: Constants.width, height: 125))
+    let colorRef = CGColorGetComponents(UIColor.yellowColor().CGColor)
+    let imageView: UIImageView = UIImageView(frame: CGRectZero)
     
     private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
     private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.toRaw())
+    private var frequencyVelocityPairs = [FrequencyVelocityPair]()
     
     private func imageFromARGB32Bitmap(pixels:[PixelData], width:UInt, height:UInt)->UIImage
     {
@@ -39,6 +41,14 @@ class SineWaveRenderer: UIControl
         layer.cornerRadius = 10
     }
     
+    override func layoutSubviews()
+    {
+        // rebuild imageView based on width
+        println("frame.width = \(frame.width)")
+        
+        imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+    }
+    
     func setFrequencyVelocityPairs(value: [FrequencyVelocityPair])
     {
         self.frequencyVelocityPairs = value
@@ -46,22 +56,22 @@ class SineWaveRenderer: UIControl
         drawSineWave()
     }
     
-    private var frequencyVelocityPairs = [FrequencyVelocityPair]()
-    
-    let colorRef = CGColorGetComponents(UIColor.yellowColor().CGColor)
-    
-    
     func drawSineWave()
     {
-        var pixelArray = [PixelData](count: WIDTH * HEIGHT, repeatedValue: PixelData(a: 0, r:0, g: 0, b: 0));
+        if frame == CGRectZero
+        {
+            return
+        }
+        
+        var pixelArray = [PixelData](count: Int(frame.width * frame.height), repeatedValue: PixelData(a: 0, r:0, g: 0, b: 0));
         var previousCurveY:Double!
         
-        for i in 1 ..< Constants.width
+        for i in 1 ..< Int(frame.width)
         {
             let foo = M_PI * 5
             let curveX = Double(i)
             
-            var curveY = Double(HEIGHT / 2)
+            var curveY = Double(frame.height / 2)
             
             for pair in frequencyVelocityPairs
             {
@@ -79,7 +89,7 @@ class SineWaveRenderer: UIControl
             // draw line from previous
             for yy in Int(min(previousCurveY, curveY)) ... Int(max(previousCurveY, curveY))
             {
-                let pixelIndex : Int = (yy * WIDTH + i);
+                let pixelIndex : Int = (yy * Int(frame.width) + i);
                 
                 pixelArray[pixelIndex].r = UInt8(255 * colorRef[0]);
                 pixelArray[pixelIndex].g = UInt8(255 * colorRef[1]);
@@ -89,7 +99,7 @@ class SineWaveRenderer: UIControl
             previousCurveY = curveY
         }
         
-        let outputImage = imageFromARGB32Bitmap(pixelArray, width: UInt(WIDTH), height: UInt(HEIGHT))
+        let outputImage = imageFromARGB32Bitmap(pixelArray, width: UInt(frame.width), height: UInt(frame.height))
         
         imageView.image = outputImage;
     }
