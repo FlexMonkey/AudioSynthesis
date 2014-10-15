@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3E90827219ECFAFB00C0CDB9 /* SineWaveRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E90827119ECFAFB00C0CDB9 /* SineWaveRenderer.swift */; };
+		3E90827519EE4C6800C0CDB9 /* FrequencyVelocityPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E90827419EE4C6800C0CDB9 /* FrequencyVelocityPair.swift */; };
 		BE3DF0F319ECDBA70063C950 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3DF0F219ECDBA70063C950 /* AppDelegate.swift */; };
 		BE3DF0F519ECDBA70063C950 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3DF0F419ECDBA70063C950 /* ViewController.swift */; };
 		BE3DF0F819ECDBA70063C950 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE3DF0F619ECDBA70063C950 /* Main.storyboard */; };
@@ -32,6 +33,7 @@
 
 /* Begin PBXFileReference section */
 		3E90827119ECFAFB00C0CDB9 /* SineWaveRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SineWaveRenderer.swift; sourceTree = "<group>"; };
+		3E90827419EE4C6800C0CDB9 /* FrequencyVelocityPair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencyVelocityPair.swift; sourceTree = "<group>"; };
 		BE3DF0ED19ECDBA70063C950 /* AudioSynthesis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioSynthesis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE3DF0F119ECDBA70063C950 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE3DF0F219ECDBA70063C950 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -74,6 +76,14 @@
 			name = sineWaveRenderer;
 			sourceTree = "<group>";
 		};
+		3E90827319EE4C4900C0CDB9 /* valueObjects */ = {
+			isa = PBXGroup;
+			children = (
+				3E90827419EE4C6800C0CDB9 /* FrequencyVelocityPair.swift */,
+			);
+			name = valueObjects;
+			sourceTree = "<group>";
+		};
 		BE3DF0E419ECDBA70063C950 = {
 			isa = PBXGroup;
 			children = (
@@ -95,6 +105,7 @@
 		BE3DF0EF19ECDBA70063C950 /* AudioSynthesis */ = {
 			isa = PBXGroup;
 			children = (
+				3E90827319EE4C4900C0CDB9 /* valueObjects */,
 				3E90827019ECFADE00C0CDB9 /* sineWaveRenderer */,
 				BE3DF11519ECDC1E0063C950 /* numericDial */,
 				BE3DF11219ECDBF50063C950 /* widgets */,
@@ -254,6 +265,7 @@
 				BE3DF0F519ECDBA70063C950 /* ViewController.swift in Sources */,
 				BE3DF11D19ECDC4E0063C950 /* NumericDialTrack.swift in Sources */,
 				3E90827219ECFAFB00C0CDB9 /* SineWaveRenderer.swift in Sources */,
+				3E90827519EE4C6800C0CDB9 /* FrequencyVelocityPair.swift in Sources */,
 				BE3DF11C19ECDC4E0063C950 /* NumericDialBackground.swift in Sources */,
 				BE3DF11B19ECDC4E0063C950 /* NumericDial.swift in Sources */,
 				BE3DF0F319ECDBA70063C950 /* AppDelegate.swift in Sources */,

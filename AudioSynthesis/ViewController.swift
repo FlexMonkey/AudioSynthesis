@@ -11,24 +11,43 @@ import UIKit
 class ViewController: UIViewController
 {
     var toneWidgets = [ToneWidget]()
+    var sineWaveRenderer = SineWaveRenderer()
 
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
+        view.addSubview(sineWaveRenderer)
+        
         for i in 0 ... 3
         {
             let toneWidget = ToneWidget(frame: CGRectZero)
+            
+            toneWidget.addTarget(self, action: "toneWidgetChangeHandler", forControlEvents: UIControlEvents.ValueChanged)
             
             toneWidgets.append(toneWidget)
             view.addSubview(toneWidget)
         }
     }
 
+    func toneWidgetChangeHandler()
+    {
+        var values = [FrequencyVelocityPair]()
+        
+        for widget in toneWidgets
+        {
+            values.append(widget.getFrequencyVelocityPair())
+        }
+        
+        sineWaveRenderer.setFrequencyVelocityPairs(values)
+    }
+    
     override func viewDidLayoutSubviews()
     {
+        sineWaveRenderer.frame = CGRect(x: Int(view.frame.width / 2) - Constants.width / 2, y: Int(topLayoutGuide.length), width: Constants.width, height: 125)
+        
         let columWidth = view.frame.width / 4
-        let targetY = view.frame.height - 625
+        let targetY = view.frame.height - 625 + topLayoutGuide.length
         
         for (i: Int, toneWidget: ToneWidget) in enumerate(toneWidgets)
         {
@@ -36,8 +55,6 @@ class ViewController: UIViewController
             
             toneWidget.frame = CGRect(x: targetX, y: targetY, width: CGFloat(Constants.width), height: 625)
         }
-        
-        
     }
     
     override func supportedInterfaceOrientations() -> Int

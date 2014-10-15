@@ -36,15 +36,24 @@ class ToneWidget: UIControl
         fatalError("init(coder:) has not been implemented")
     }
     
+    func getFrequencyVelocityPair() -> FrequencyVelocityPair
+    {
+        return FrequencyVelocityPair(frequency: Int(toneDial.currentValue * 128), velocity: Int(velocityDial.currentValue * 128))
+    }
+    
     func dialChangeHander()
     {
-        sineWaveRenderer.setValues(frequency: toneDial.currentValue, velocity: velocityDial.currentValue)
+        sineWaveRenderer.setFrequencyVelocityPairs([getFrequencyVelocityPair()])
+        
+        // sineWaveRenderer.setValues(frequency: toneDial.currentValue, velocity: velocityDial.currentValue)
+        
+        sendActionsForControlEvents(UIControlEvents.ValueChanged)
     }
     
     override func didMoveToWindow()
     {
         sineWaveRenderer.frame = CGRect(x: 0, y: 0, width: Constants.width, height: 125)
-        toneDial.frame = CGRect(x: 0, y: 135, width: Constants.width, height: Constants.width)
+        toneDial.frame = CGRect(x: 0, y: 145, width: Constants.width, height: Constants.width)
         velocityDial.frame = CGRect(x: 0, y: 355, width: Constants.width, height: Constants.width)
         
         toneDial.labelFunction = labelFunction("Tone")

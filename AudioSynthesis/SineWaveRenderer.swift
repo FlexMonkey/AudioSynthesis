@@ -39,16 +39,14 @@ class SineWaveRenderer: UIControl
         layer.cornerRadius = 10
     }
     
-    func setValues(#frequency: Double, velocity: Double)
+    func setFrequencyVelocityPairs(value: [FrequencyVelocityPair])
     {
-        self.frequency = frequency
-        self.veloctiy = velocity
+        self.frequencyVelocityPairs = value
         
         drawSineWave()
     }
     
-    private var frequency: Double = 0
-    private var veloctiy: Double = 0
+    private var frequencyVelocityPairs = [FrequencyVelocityPair]()
     
     let colorRef = CGColorGetComponents(UIColor.yellowColor().CGColor)
     
@@ -62,13 +60,23 @@ class SineWaveRenderer: UIControl
         {
             let foo = M_PI * 5
             let curveX = Double(i)
-            let curveY = Double(HEIGHT / 2) + ((sin(curveX / foo * frequency * 5)) * (veloctiy * 50))
+            
+            var curveY = Double(HEIGHT / 2)
+            
+            for pair in frequencyVelocityPairs
+            {
+                let frequency = Double(pair.frequency) / 128.0
+                let velocity = Double(pair.velocity) / 128.0
+                
+                curveY += ((sin(curveX / foo * frequency * 5)) * (velocity * 10))
+            }
             
             if previousCurveY == nil
             {
                 previousCurveY = curveY
             }
             
+            // draw line from previous
             for yy in Int(min(previousCurveY, curveY)) ... Int(max(previousCurveY, curveY))
             {
                 let pixelIndex : Int = (yy * WIDTH + i);
