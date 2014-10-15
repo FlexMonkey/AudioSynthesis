@@ -10,27 +10,36 @@ import UIKit
 
 class ToneWidget: UIControl
 {
-    let toneDial = NumericDial(frame: CGRectZero)
-    let velocityDial = NumericDial(frame: CGRectZero)
-    let sineWaveRenderer = SineWaveRenderer(frame: CGRectZero)
+    private let frequencyDial = NumericDial(frame: CGRectZero)
+    private let velocityDial = NumericDial(frame: CGRectZero)
+    private let sineWaveRenderer = SineWaveRenderer(frame: CGRectZero)
     
-    override init(frame: CGRect)
+    private let index: Int
+    
+    required init(index: Int, frame: CGRect)
     {
+        self.index = index
+        
         super.init(frame: frame)
         
         addSubview(sineWaveRenderer)
-        addSubview(toneDial)
+        addSubview(frequencyDial)
         addSubview(velocityDial)
         
-        toneDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
+        frequencyDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
         velocityDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
         
-        toneDial.currentValue = 0.5
-        velocityDial.currentValue = 0.5
+        frequencyDial.currentValue = 0.25 * Double(index % 4 + 1)
+        velocityDial.currentValue = 0.25 * Double(4 - index % 4)
         
         dialChangeHander()
     }
 
+    func getIndex() -> Int
+    {
+        return index
+    }
+    
     required init(coder aDecoder: NSCoder)
     {
         fatalError("init(coder:) has not been implemented")
@@ -38,7 +47,7 @@ class ToneWidget: UIControl
     
     func getFrequencyVelocityPair() -> FrequencyVelocityPair
     {
-        return FrequencyVelocityPair(frequency: Int(toneDial.currentValue * 128), velocity: Int(velocityDial.currentValue * 128))
+        return FrequencyVelocityPair(frequency: Int(frequencyDial.currentValue * 128), velocity: Int(velocityDial.currentValue * 128))
     }
     
     func dialChangeHander()
@@ -51,10 +60,10 @@ class ToneWidget: UIControl
     override func didMoveToWindow()
     {
         sineWaveRenderer.frame = CGRect(x: 0, y: 0, width: Constants.width, height: 125)
-        toneDial.frame = CGRect(x: 0, y: 145, width: Constants.width, height: Constants.width)
+        frequencyDial.frame = CGRect(x: 0, y: 145, width: Constants.width, height: Constants.width)
         velocityDial.frame = CGRect(x: 0, y: 355, width: Constants.width, height: Constants.width)
         
-        toneDial.labelFunction = labelFunction("Tone")
+        frequencyDial.labelFunction = labelFunction("Tone")
         velocityDial.labelFunction = labelFunction("Velocity")
         
         sineWaveRenderer.setFrequencyVelocityPairs([getFrequencyVelocityPair()])

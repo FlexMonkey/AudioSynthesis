@@ -10,9 +10,6 @@ import UIKit
 
 class SineWaveRenderer: UIControl
 {
-    // let WIDTH = Constants.width
-    // let HEIGHT = 125
-    
     let colorRef = CGColorGetComponents(UIColor.yellowColor().CGColor)
     let imageView: UIImageView = UIImageView(frame: CGRectZero)
     
@@ -43,9 +40,6 @@ class SineWaveRenderer: UIControl
     
     override func layoutSubviews()
     {
-        // rebuild imageView based on width
-        println("frame.width = \(frame.width)")
-        
         imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
     }
     
@@ -56,7 +50,7 @@ class SineWaveRenderer: UIControl
         drawSineWave()
     }
     
-    func drawSineWave()
+    final func drawSineWave()
     {
         if frame == CGRectZero
         {

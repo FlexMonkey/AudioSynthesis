@@ -18,19 +18,26 @@ class ViewController: UIViewController
         super.viewDidLoad()
         
         view.addSubview(sineWaveRenderer)
-        
+   
         for i in 0 ... 3
         {
-            let toneWidget = ToneWidget(frame: CGRectZero)
+            let toneWidget = ToneWidget(index: i, frame: CGRectZero)
             
-            toneWidget.addTarget(self, action: "toneWidgetChangeHandler", forControlEvents: UIControlEvents.ValueChanged)
+            toneWidget.addTarget(self, action: "toneWidgetChangeHandler:", forControlEvents: UIControlEvents.ValueChanged)
             
             toneWidgets.append(toneWidget)
             view.addSubview(toneWidget)
         }
     }
 
-    func toneWidgetChangeHandler()
+    func toneWidgetChangeHandler(toneWidget : ToneWidget)
+    {
+        println("tone widget \(toneWidget.getIndex())")
+        
+        updateSineWave()
+    }
+    
+    func updateSineWave()
     {
         var values = [FrequencyVelocityPair]()
         
@@ -58,7 +65,7 @@ class ViewController: UIViewController
             toneWidget.frame = CGRect(x: targetX, y: targetY, width: CGFloat(Constants.width), height: 625)
         }
         
-        toneWidgetChangeHandler()
+        updateSineWave()
     }
     
     override func supportedInterfaceOrientations() -> Int
