@@ -43,9 +43,9 @@ class ToneWidget: UIControl
     
     override func didMoveToWindow()
     {
-        sineWaveRenderer.frame = CGRect(x: 0, y: 0, width: 250, height: 125)
-        toneDial.frame = CGRect(x: 0, y: 135, width: 250, height: 250)
-        velocityDial.frame = CGRect(x: 0, y: 355, width: 250, height: 250)
+        sineWaveRenderer.frame = CGRect(x: 0, y: 0, width: Constants.width, height: 125)
+        toneDial.frame = CGRect(x: 0, y: 135, width: Constants.width, height: Constants.width)
+        velocityDial.frame = CGRect(x: 0, y: 355, width: Constants.width, height: Constants.width)
         
         toneDial.labelFunction = labelFunction("Tone")
         velocityDial.labelFunction = labelFunction("Velocity")

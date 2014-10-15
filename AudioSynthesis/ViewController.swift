@@ -10,19 +10,34 @@ import UIKit
 
 class ViewController: UIViewController
 {
+    var toneWidgets = [ToneWidget]()
 
-    let toneWidget = ToneWidget(frame: CGRectZero)
-    
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
-        view.addSubview(toneWidget)
+        for i in 0 ... 3
+        {
+            let toneWidget = ToneWidget(frame: CGRectZero)
+            
+            toneWidgets.append(toneWidget)
+            view.addSubview(toneWidget)
+        }
     }
 
     override func viewDidLayoutSubviews()
     {
-        toneWidget.frame = CGRect(x: topLayoutGuide.length, y: topLayoutGuide.length, width: 250, height: 625)
+        let columWidth = view.frame.width / 4
+        let targetY = view.frame.height - 625
+        
+        for (i: Int, toneWidget: ToneWidget) in enumerate(toneWidgets)
+        {
+            let targetX = CGFloat(i) * columWidth + (columWidth / 2) - CGFloat(Constants.width / 2)
+            
+            toneWidget.frame = CGRect(x: targetX, y: targetY, width: CGFloat(Constants.width), height: 625)
+        }
+        
+        
     }
     
     override func supportedInterfaceOrientations() -> Int
@@ -30,5 +45,10 @@ class ViewController: UIViewController
         return Int(UIInterfaceOrientationMask.Landscape.toRaw())
     }
 
+}
+
+struct Constants
+{
+    static let width = 220
 }
 

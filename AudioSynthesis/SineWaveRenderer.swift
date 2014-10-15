@@ -10,10 +10,10 @@ import UIKit
 
 class SineWaveRenderer: UIControl
 {
-    let WIDTH = 250
+    let WIDTH = Constants.width
     let HEIGHT = 125
     
-    let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 250, height: 125))
+    let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: Constants.width, height: 125))
     
     private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
     private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.toRaw())
@@ -58,7 +58,7 @@ class SineWaveRenderer: UIControl
         var pixelArray = [PixelData](count: WIDTH * HEIGHT, repeatedValue: PixelData(a: 0, r:0, g: 0, b: 0));
         var previousCurveY:Double!
         
-        for i in 1 ..< 250
+        for i in 1 ..< Constants.width
         {
             let foo = M_PI * 5
             let curveX = Double(i)
