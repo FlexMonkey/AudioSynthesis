@@ -13,6 +13,9 @@ class ViewController: UIViewController
     var toneWidgets = [ToneWidget]()
     var sineWaveRenderer = SineWaveRenderer()
 
+    var soundGenerator = SoundGenerator()
+    var currentNotes = [FrequencyVelocityPair]()
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -27,16 +30,36 @@ class ViewController: UIViewController
             
             toneWidgets.append(toneWidget)
             view.addSubview(toneWidget)
+            
+            currentNotes.append(toneWidget.getFrequencyVelocityPair())
+            
+            soundGenerator.playNoteOn(UInt32(toneWidget.getFrequencyVelocityPair().frequency), velocity: UInt32(toneWidget.getFrequencyVelocityPair().velocity), channelNumber: UInt32(toneWidget.getIndex()))
         }
     }
 
     func toneWidgetChangeHandler(toneWidget : ToneWidget)
     {
-        println("tone widget \(toneWidget.getIndex())")
+        soundGenerator.playNoteOff(UInt32(currentNotes[toneWidget.getIndex()].frequency), channelNumber: UInt32(toneWidget.getIndex()))
         
         updateSineWave()
+        
+        soundGenerator.playNoteOn(UInt32(toneWidget.getFrequencyVelocityPair().frequency), velocity: UInt32(toneWidget.getFrequencyVelocityPair().velocity), channelNumber: UInt32(toneWidget.getIndex()))
+        
+        currentNotes[toneWidget.getIndex()] = toneWidget.getFrequencyVelocityPair()
     }
     
+    /*
+@IBAction func playNoteOn(b:UIButton) {
+var note:UInt32 = UInt32(b.tag)
+var velocity:UInt32 = 25
+soundGenerator.playNoteOn(note, velocity: velocity)
+}
+
+@IBAction func playNoteOff(b:UIButton) {
+var note:UInt32 = UInt32(b.tag)
+soundGenerator.playNoteOff(note)
+*/
+
     func updateSineWave()
     {
         var values = [FrequencyVelocityPair]()
@@ -44,6 +67,8 @@ class ViewController: UIViewController
         for widget in toneWidgets
         {
             values.append(widget.getFrequencyVelocityPair())
+            
+  
         }
         
         sineWaveRenderer.setFrequencyVelocityPairs(values)

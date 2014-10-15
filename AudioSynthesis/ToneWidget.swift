@@ -63,7 +63,7 @@ class ToneWidget: UIControl
         frequencyDial.frame = CGRect(x: 0, y: 145, width: Constants.width, height: Constants.width)
         velocityDial.frame = CGRect(x: 0, y: 355, width: Constants.width, height: Constants.width)
         
-        frequencyDial.labelFunction = labelFunction("Tone")
+        frequencyDial.labelFunction = labelFunction("Frequency")
         velocityDial.labelFunction = labelFunction("Velocity")
         
         sineWaveRenderer.setFrequencyVelocityPairs([getFrequencyVelocityPair()])
