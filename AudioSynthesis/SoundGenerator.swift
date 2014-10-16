@@ -96,15 +96,7 @@ class SoundGenerator : NSObject {
         var status : OSStatus = OSStatus(noErr)
         
         status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, noteNum, velocity, 0)
-        // status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, noteNum / 2, velocity, 0)
-        // status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, noteNum * 2, velocity, 0)
-
-        status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, UInt32(Float(noteNum) / 2), 255, 0)
-        status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, UInt32(Float(noteNum) / 1.5), 255, 0)
-        status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, UInt32(Float(noteNum) * 0.666), velocity, 0)
-        status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, UInt32(Float(noteNum) * 1.25), velocity, 0)
-        status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, UInt32(Float(noteNum) * 2), velocity, 0)
-        
+     
         CheckError(status)
         println("noteon status is \(status)")
         
@@ -115,16 +107,7 @@ class SoundGenerator : NSObject {
         var noteCommand:UInt32 = 0x80 | channelNumber;
         var status : OSStatus = OSStatus(noErr)
         status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, noteNum, 0, 0)
-        // status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, noteNum / 2, 0, 0)
-        // status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, noteNum * 2, 0, 0)
-        
-        status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, UInt32(Float(noteNum) / 2), 0, 0)
-        status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, UInt32(Float(noteNum) / 1.5), 0, 0)
-        status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, UInt32(Float(noteNum) * 0.666), 0, 0)
-        status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, UInt32(Float(noteNum) * 1.25), 0, 0)
-        status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, UInt32(Float(noteNum) * 2), 0, 0)
-
-        
+     
         CheckError(status)
         println("noteoff status is \(status)")
     }
