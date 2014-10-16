@@ -47,7 +47,7 @@ class ToneWidget: UIControl
     
     func getFrequencyVelocityPair() -> FrequencyVelocityPair
     {
-        return FrequencyVelocityPair(frequency: Int(frequencyDial.currentValue * 128), velocity: Int(velocityDial.currentValue * 128))
+        return FrequencyVelocityPair(frequency: Int(frequencyDial.currentValue * 127), velocity: Int(velocityDial.currentValue * 127))
     }
     
     func dialChangeHander()
@@ -73,7 +73,7 @@ class ToneWidget: UIControl
     {
         func lblFn(value: Double) -> String
         {
-            return "\(label)\n\(Int(value * 128))"
+            return "\(label)\n\(Int(value * 127 + 1))"
         }
         
         return lblFn

@@ -69,8 +69,8 @@ class SineWaveRenderer: UIControl
             
             for pair in frequencyVelocityPairs
             {
-                let frequency = Double(pair.frequency) / 128.0
-                let velocity = Double(pair.velocity) / 128.0
+                let frequency = Double(pair.frequency) / 127.0
+                let velocity = Double(pair.velocity) / 127.0
                 
                 curveY += ((sin(curveX / foo * frequency * 5)) * (velocity * 10))
             }
