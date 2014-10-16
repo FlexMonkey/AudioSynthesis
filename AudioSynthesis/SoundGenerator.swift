@@ -5,6 +5,7 @@
 //  Created by Gene De Lisa on 6/8/14.
 //  Copyright (c) 2014 Gene De Lisa. All rights reserved.
 //
+//  Original article: http://www.rockhoppertech.com/blog/swift-and-core-audio/
 
 import Foundation
 import AudioToolbox
