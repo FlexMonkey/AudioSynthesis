@@ -24,7 +24,7 @@ class ViewController: UIViewController
    
         for i in 0 ... 3
         {
-            let toneWidget = ToneWidget(index: i, frame: CGRectZero)
+            let toneWidget = ToneWidget(channelNumber: UInt32(i), frame: CGRectZero)
             
             toneWidget.addTarget(self, action: "toneWidgetChangeHandler:", forControlEvents: UIControlEvents.ValueChanged)
             
@@ -33,32 +33,20 @@ class ViewController: UIViewController
             
             currentNotes.append(toneWidget.getFrequencyVelocityPair())
             
-            soundGenerator.playNoteOn(UInt32(toneWidget.getFrequencyVelocityPair().frequency), velocity: UInt32(toneWidget.getFrequencyVelocityPair().velocity), channelNumber: UInt32(toneWidget.getIndex()))
+            soundGenerator.playNoteOn(frequencyVelocityPair: toneWidget.getFrequencyVelocityPair(), channelNumber: toneWidget.getChannelNumber())
         }
     }
 
     func toneWidgetChangeHandler(toneWidget : ToneWidget)
     {
-        soundGenerator.playNoteOff(UInt32(currentNotes[toneWidget.getIndex()].frequency), channelNumber: UInt32(toneWidget.getIndex()))
+        soundGenerator.playNoteOff(frequencyVelocityPair: currentNotes[Int(toneWidget.getChannelNumber())], channelNumber: toneWidget.getChannelNumber())
         
         updateSineWave()
         
-        soundGenerator.playNoteOn(UInt32(toneWidget.getFrequencyVelocityPair().frequency), velocity: UInt32(toneWidget.getFrequencyVelocityPair().velocity), channelNumber: UInt32(toneWidget.getIndex()))
+        soundGenerator.playNoteOn(frequencyVelocityPair: toneWidget.getFrequencyVelocityPair(), channelNumber: toneWidget.getChannelNumber())
         
-        currentNotes[toneWidget.getIndex()] = toneWidget.getFrequencyVelocityPair()
+        currentNotes[Int(toneWidget.getChannelNumber())] = toneWidget.getFrequencyVelocityPair()
     }
-    
-    /*
-@IBAction func playNoteOn(b:UIButton) {
-var note:UInt32 = UInt32(b.tag)
-var velocity:UInt32 = 25
-soundGenerator.playNoteOn(note, velocity: velocity)
-}
-
-@IBAction func playNoteOff(b:UIButton) {
-var note:UInt32 = UInt32(b.tag)
-soundGenerator.playNoteOff(note)
-*/
 
     func updateSineWave()
     {
