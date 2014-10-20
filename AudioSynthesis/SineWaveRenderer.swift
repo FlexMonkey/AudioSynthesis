@@ -14,7 +14,7 @@ class SineWaveRenderer: UIControl
     let imageView: UIImageView = UIImageView(frame: CGRectZero)
     
     private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-    private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.toRaw())
+    private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.rawValue)
     private var frequencyVelocityPairs = [FrequencyVelocityPair]()
     
     private func imageFromARGB32Bitmap(pixels:[PixelData], width:UInt, height:UInt)->UIImage
@@ -27,7 +27,7 @@ class SineWaveRenderer: UIControl
         
         let cgim = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, width * UInt(sizeof(PixelData)), rgbColorSpace,	bitmapInfo, providerRef, nil, true, kCGRenderingIntentDefault)
         
-        return UIImage(CGImage: cgim);
+        return UIImage(CGImage: cgim)!;
     }
     
     override func didMoveToSuperview()

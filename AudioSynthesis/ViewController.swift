@@ -55,8 +55,6 @@ class ViewController: UIViewController
         for widget in toneWidgets
         {
             values.append(widget.getFrequencyVelocityPair())
-            
-  
         }
         
         sineWaveRenderer.setFrequencyVelocityPairs(values)
@@ -83,7 +81,7 @@ class ViewController: UIViewController
     
     override func supportedInterfaceOrientations() -> Int
     {
-        return Int(UIInterfaceOrientationMask.Landscape.toRaw())
+        return Int(UIInterfaceOrientationMask.Landscape.rawValue)
     }
 
 }

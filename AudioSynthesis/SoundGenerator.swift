@@ -92,7 +92,6 @@ class SoundGenerator : NSObject {
         self.isPlaying = true;
     }
     
-    
     func playNoteOn(#frequencyVelocityPair: FrequencyVelocityPair, channelNumber:UInt32)
     {
         let noteNum = UInt32(frequencyVelocityPair.frequency)
@@ -102,11 +101,11 @@ class SoundGenerator : NSObject {
         var status : OSStatus = OSStatus(noErr)
         
         status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, noteNum, velocity, 0)
-     
+        
         CheckError(status)
         println("noteon status is \(status)")
         
-        // MusicDeviceStartNote(<#inUnit: MusicDeviceComponent#>, <#inInstrument: MusicDeviceInstrumentID#>, <#inGroupID: MusicDeviceGroupID#>, <#outNoteInstanceID: UnsafeMutablePointer<NoteInstanceID>#>, <#inOffsetSampleFrame: UInt32#>, <#inParams: UnsafePointer<MusicDeviceNoteParams>#>)
+        // MusicDeviceStartNote(<,#inUnit: MusicDeviceComponent#>, <#inInstrument: MusicDeviceInstrumentID#>, <#inGroupID: MusicDeviceGroupID#>, <#outNoteInstanceID: UnsafeMutablePointer<NoteInstanceID>#>, <#inOffsetSampleFrame: UInt32#>, <#inParams: UnsafePointer<MusicDeviceNoteParams>#>)
     }
     
     func playNoteOff(#frequencyVelocityPair: FrequencyVelocityPair, channelNumber:UInt32)
@@ -117,7 +116,7 @@ class SoundGenerator : NSObject {
         var status : OSStatus = OSStatus(noErr)
         
         status = MusicDeviceMIDIEvent(self.samplerUnit, noteCommand, noteNum, 0, 0)
-     
+        
         CheckError(status)
         println("noteoff status is \(status)")
     }
