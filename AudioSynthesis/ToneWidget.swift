@@ -14,11 +14,11 @@ class ToneWidget: UIControl
     private let velocityDial = NumericDial(frame: CGRectZero)
     private let sineWaveRenderer = SineWaveRenderer(frame: CGRectZero)
     
-    private let index: Int
+    private let channelNumber: UInt32
     
-    required init(index: Int, frame: CGRect)
+    required init(channelNumber: UInt32, frame: CGRect)
     {
-        self.index = index
+        self.channelNumber = channelNumber
         
         super.init(frame: frame)
         
@@ -29,15 +29,15 @@ class ToneWidget: UIControl
         frequencyDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
         velocityDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
         
-        frequencyDial.currentValue = 0.25 * Double(index % 4 + 1)
-        velocityDial.currentValue = 0.25 * Double(4 - index % 4)
+        frequencyDial.currentValue = 0.25 * Double(channelNumber % 4 + 1)
+        velocityDial.currentValue = 0.25 * Double(4 - channelNumber % 4)
         
         dialChangeHander()
     }
 
-    func getIndex() -> Int
+    func getChannelNumber() -> UInt32
     {
-        return index
+        return channelNumber
     }
     
     required init(coder aDecoder: NSCoder)
