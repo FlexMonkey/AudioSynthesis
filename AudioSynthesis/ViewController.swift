@@ -47,18 +47,7 @@ class ViewController: UIViewController
         
         currentNotes[toneWidget.getIndex()] = toneWidget.getFrequencyVelocityPair()
     }
-    
-    /*
-@IBAction func playNoteOn(b:UIButton) {
-var note:UInt32 = UInt32(b.tag)
-var velocity:UInt32 = 25
-soundGenerator.playNoteOn(note, velocity: velocity)
-}
 
-@IBAction func playNoteOff(b:UIButton) {
-var note:UInt32 = UInt32(b.tag)
-soundGenerator.playNoteOff(note)
-*/
 
     func updateSineWave()
     {
@@ -67,8 +56,6 @@ soundGenerator.playNoteOff(note)
         for widget in toneWidgets
         {
             values.append(widget.getFrequencyVelocityPair())
-            
-  
         }
         
         sineWaveRenderer.setFrequencyVelocityPairs(values)
@@ -95,7 +82,7 @@ soundGenerator.playNoteOff(note)
     
     override func supportedInterfaceOrientations() -> Int
     {
-        return Int(UIInterfaceOrientationMask.Landscape.toRaw())
+        return Int(UIInterfaceOrientationMask.Landscape.rawValue)
     }
 
 }

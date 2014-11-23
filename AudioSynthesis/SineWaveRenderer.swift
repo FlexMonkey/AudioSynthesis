@@ -14,7 +14,7 @@ class SineWaveRenderer: UIControl
     let imageView: UIImageView = UIImageView(frame: CGRectZero)
     
     private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-    private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.toRaw())
+    private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.rawValue)
     private var frequencyVelocityPairs = [FrequencyVelocityPair]()
     
     private func imageFromARGB32Bitmap(pixels:[PixelData], width:UInt, height:UInt)->UIImage
@@ -27,7 +27,7 @@ class SineWaveRenderer: UIControl
         
         let cgim = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, width * UInt(sizeof(PixelData)), rgbColorSpace,	bitmapInfo, providerRef, nil, true, kCGRenderingIntentDefault)
         
-        return UIImage(CGImage: cgim);
+        return UIImage(CGImage: cgim)!;
     }
     
     override func didMoveToSuperview()
@@ -62,7 +62,7 @@ class SineWaveRenderer: UIControl
         
         for i in 1 ..< Int(frame.width)
         {
-            let foo = M_PI * 5
+            let scale = M_PI * 5
             let curveX = Double(i)
             
             var curveY = Double(frame.height / 2)
@@ -72,7 +72,7 @@ class SineWaveRenderer: UIControl
                 let frequency = Double(pair.frequency) / 127.0
                 let velocity = Double(pair.velocity) / 127.0
                 
-                curveY += ((sin(curveX / foo * frequency * 5)) * (velocity * 10))
+                curveY += ((sin(curveX / scale * frequency * 5)) * (velocity * 10))
             }
             
             if previousCurveY == nil
