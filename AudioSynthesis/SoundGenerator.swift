@@ -32,7 +32,7 @@ class SoundGenerator : NSObject
     {
         let scaledFrequency = 0 + (value.frequency * Constants.frequencyScale)
 
-        oscillators[channelNumber].amplitude.setValue(value.amplitude / 2.0, forKey: "value")
+        oscillators[channelNumber].amplitude.setValue(value.amplitude / 4.0, forKey: "value")
         
         oscillators[channelNumber].frequency.setValue(scaledFrequency, forKey: "value")
     }
@@ -44,7 +44,7 @@ class FMSynth: AKInstrument
 {
  
     var frequency = AKInstrumentProperty(value: 0,  minimum: 0, maximum: Constants.frequencyScale)
-    var amplitude = AKInstrumentProperty(value: 0, minimum: 0,   maximum: 0.5)
+    var amplitude = AKInstrumentProperty(value: 0, minimum: 0,   maximum: 0.25)
     
     override init()
     {
