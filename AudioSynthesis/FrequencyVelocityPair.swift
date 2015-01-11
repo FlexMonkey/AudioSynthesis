@@ -8,14 +8,14 @@
 
 import Foundation
 
-struct FrequencyVelocityPair
+struct FrequencyAmplitudePair
 {
-    var frequency: Int
-    var velocity: Int
+    var frequency: Float
+    var amplitude: Float
     
-    init (frequency: Int, velocity: Int)
+    init (frequency: Float, amplitude: Float)
     {
         self.frequency = frequency
-        self.velocity = velocity
+        self.amplitude = amplitude
     }
 }

@@ -68,7 +68,7 @@ class NumericDial: UIControl
         
         if distance > (frame.width / 2.0 * 0.6) && distance < frame.width / 2 && ((angle < -45 && angle > -180) || (angle < 180 && angle > 45))
         {
-            currentValue = Double(getValueFromAngle(angle))
+            currentValue = Float(getValueFromAngle(angle))
         }
         else if distance > (frame.width / 2.0 * 0.6) && distance < frame.width / 2 && (angle > -45 && angle < -35)
         {
@@ -80,7 +80,7 @@ class NumericDial: UIControl
         }
     }
     
-    var currentValue : Double = 0.0
+    var currentValue : Float = 0.0
     {
         didSet
         {
@@ -92,7 +92,7 @@ class NumericDial: UIControl
         }
     }
 
-    var labelFunction : (Double) -> String = NumericDial.defaultLabelFunction
+    var labelFunction : (Float) -> String = NumericDial.defaultLabelFunction
     {
         didSet
         {
@@ -146,7 +146,7 @@ class NumericDial: UIControl
         return returnNumber;
     }
     
-    class func defaultLabelFunction(value : Double) -> String
+    class func defaultLabelFunction(value : Float) -> String
     {
         return NSString(format: "%.4f", value)
     }

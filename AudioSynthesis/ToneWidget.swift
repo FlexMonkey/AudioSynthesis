@@ -11,12 +11,12 @@ import UIKit
 class ToneWidget: UIControl
 {
     private let frequencyDial = NumericDial(frame: CGRectZero)
-    private let velocityDial = NumericDial(frame: CGRectZero)
+    private let amplitudeDial = NumericDial(frame: CGRectZero)
     private let sineWaveRenderer = SineWaveRenderer(frame: CGRectZero)
     
-    private let channelNumber: UInt32
+    private let channelNumber: Int
     
-    required init(channelNumber: UInt32, frame: CGRect)
+    required init(channelNumber: Int, frame: CGRect)
     {
         self.channelNumber = channelNumber
         
@@ -24,18 +24,18 @@ class ToneWidget: UIControl
         
         addSubview(sineWaveRenderer)
         addSubview(frequencyDial)
-        addSubview(velocityDial)
+        addSubview(amplitudeDial)
         
         frequencyDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
-        velocityDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
+        amplitudeDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
         
-        frequencyDial.currentValue = 0.25 * Double(channelNumber % 4 + 1)
-        velocityDial.currentValue = 0.25 * Double(4 - channelNumber % 4)
+        frequencyDial.currentValue = 0.25 * Float(channelNumber % 4 + 1)
+        amplitudeDial.currentValue = 0.25 * Float(4 - channelNumber % 4)
         
         dialChangeHander()
     }
 
-    func getChannelNumber() -> UInt32
+    func getChannelNumber() -> Int
     {
         return channelNumber
     }
@@ -45,14 +45,14 @@ class ToneWidget: UIControl
         fatalError("init(coder:) has not been implemented")
     }
     
-    func getFrequencyVelocityPair() -> FrequencyVelocityPair
+    func getFrequencyAmplitudePair() -> FrequencyAmplitudePair
     {
-        return FrequencyVelocityPair(frequency: Int(frequencyDial.currentValue * 127), velocity: Int(velocityDial.currentValue * 127))
+        return FrequencyAmplitudePair(frequency: frequencyDial.currentValue, amplitude: amplitudeDial.currentValue)
     }
     
     func dialChangeHander()
     {
-        sineWaveRenderer.setFrequencyVelocityPairs([getFrequencyVelocityPair()])
+        sineWaveRenderer.setFrequencyAmplitudePairs([getFrequencyAmplitudePair()])
         
         sendActionsForControlEvents(UIControlEvents.ValueChanged)
     }
@@ -61,21 +61,23 @@ class ToneWidget: UIControl
     {
         sineWaveRenderer.frame = CGRect(x: 0, y: 0, width: Constants.width, height: 125)
         frequencyDial.frame = CGRect(x: 0, y: 145, width: Constants.width, height: Constants.width)
-        velocityDial.frame = CGRect(x: 0, y: 355, width: Constants.width, height: Constants.width)
+        amplitudeDial.frame = CGRect(x: 0, y: 355, width: Constants.width, height: Constants.width)
         
-        frequencyDial.labelFunction = labelFunction("Frequency")
-        velocityDial.labelFunction = labelFunction("Velocity")
+        frequencyDial.labelFunction = frequencyLabelFunction
+        amplitudeDial.labelFunction = amplitudeLabelFunction
         
-        sineWaveRenderer.setFrequencyVelocityPairs([getFrequencyVelocityPair()])
+        sineWaveRenderer.setFrequencyAmplitudePairs([getFrequencyAmplitudePair()])
     }
     
-    func labelFunction(label: String) -> ((Double) -> String)
+    func frequencyLabelFunction(value: Float) -> String
     {
-        func lblFn(value: Double) -> String
-        {
-            return "\(label)\n\(Int(value * 127 + 1))"
-        }
-        
-        return lblFn
+        let valueAsString = NSString(format: "%d", Int(value * Constants.frequencyScale))
+        return "Frequency\n\(valueAsString)"
+    }
+    
+    func amplitudeLabelFunction(value: Float) -> String
+    {
+        let valueAsString = NSString(format: "%.4f", value)
+        return "Amplitude\n\(valueAsString)"
     }
 }

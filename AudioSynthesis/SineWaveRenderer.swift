@@ -15,7 +15,7 @@ class SineWaveRenderer: UIControl
     
     private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
     private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.rawValue)
-    private var frequencyVelocityPairs = [FrequencyVelocityPair]()
+    private var frequencyVelocityPairs = [FrequencyAmplitudePair]()
     
     private func imageFromARGB32Bitmap(pixels:[PixelData], width:UInt, height:UInt)->UIImage
     {
@@ -43,7 +43,7 @@ class SineWaveRenderer: UIControl
         imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
     }
     
-    func setFrequencyVelocityPairs(value: [FrequencyVelocityPair])
+    func setFrequencyAmplitudePairs(value: [FrequencyAmplitudePair])
     {
         self.frequencyVelocityPairs = value
         
@@ -69,8 +69,8 @@ class SineWaveRenderer: UIControl
             
             for pair in frequencyVelocityPairs
             {
-                let frequency = Double(pair.frequency) / 127.0
-                let velocity = Double(pair.velocity) / 127.0
+                let frequency = Double(pair.frequency)
+                let velocity = Double(pair.amplitude)
                 
                 curveY += ((sin(curveX / scale * frequency * 5)) * (velocity * 10))
             }

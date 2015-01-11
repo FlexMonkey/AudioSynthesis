@@ -14,51 +14,46 @@ class ViewController: UIViewController
     var sineWaveRenderer = SineWaveRenderer()
 
     var soundGenerator = SoundGenerator()
-    var currentNotes = [FrequencyVelocityPair]()
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
         view.addSubview(sineWaveRenderer)
+        
+        soundGenerator.setUp()
    
-        for i in 0 ... 3
+        for i in 0 ..< Constants.numInstruments
         {
-            let toneWidget = ToneWidget(channelNumber: UInt32(i), frame: CGRectZero)
+            let toneWidget = ToneWidget(channelNumber: i, frame: CGRectZero)
             
             toneWidget.addTarget(self, action: "toneWidgetChangeHandler:", forControlEvents: UIControlEvents.ValueChanged)
             
             toneWidgets.append(toneWidget)
             view.addSubview(toneWidget)
             
-            currentNotes.append(toneWidget.getFrequencyVelocityPair())
-            
-            soundGenerator.playNoteOn(frequencyVelocityPair: toneWidget.getFrequencyVelocityPair(), channelNumber: toneWidget.getChannelNumber())
+            soundGenerator.playNoteOn(toneWidget.getFrequencyAmplitudePair(), channelNumber: i)
         }
     }
 
     func toneWidgetChangeHandler(toneWidget : ToneWidget)
     {
-        soundGenerator.playNoteOff(frequencyVelocityPair: currentNotes[Int(toneWidget.getChannelNumber())], channelNumber: toneWidget.getChannelNumber())
-        
         updateSineWave()
-        
-        soundGenerator.playNoteOn(frequencyVelocityPair: toneWidget.getFrequencyVelocityPair(), channelNumber: toneWidget.getChannelNumber())
-        
-        currentNotes[Int(toneWidget.getChannelNumber())] = toneWidget.getFrequencyVelocityPair()
+  
+        soundGenerator.playNoteOn(toneWidget.getFrequencyAmplitudePair(), channelNumber: toneWidget.getChannelNumber())
     }
 
 
     func updateSineWave()
     {
-        var values = [FrequencyVelocityPair]()
+        var values = [FrequencyAmplitudePair]()
         
         for widget in toneWidgets
         {
-            values.append(widget.getFrequencyVelocityPair())
+            values.append(widget.getFrequencyAmplitudePair())
         }
         
-        sineWaveRenderer.setFrequencyVelocityPairs(values)
+        sineWaveRenderer.setFrequencyAmplitudePairs(values)
     }
     
     override func viewDidLayoutSubviews()
@@ -90,5 +85,7 @@ class ViewController: UIViewController
 struct Constants
 {
     static let width = 220
+    static let numInstruments = 4
+    static let frequencyScale: Float = 1760.0
 }
 
