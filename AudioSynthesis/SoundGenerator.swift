@@ -10,7 +10,7 @@ class SoundGenerator : NSObject
 {
     var oscillators = [FMSynth]()
     
-    func setUp()
+    final func setUp()
     {
         for i in 0 ..< Constants.numInstruments
         {
@@ -28,7 +28,7 @@ class SoundGenerator : NSObject
         }
     }
     
-    func playNoteOn(value: FrequencyAmplitudePair, channelNumber: Int)
+    final func playNoteOn(value: FrequencyAmplitudePair, channelNumber: Int)
     {
         let scaledFrequency = 0 + (value.frequency * Constants.frequencyScale)
 

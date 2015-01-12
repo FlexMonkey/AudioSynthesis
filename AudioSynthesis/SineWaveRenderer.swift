@@ -10,25 +10,14 @@ import UIKit
 
 class SineWaveRenderer: UIControl
 {
-    let colorRef = CGColorGetComponents(UIColor.yellowColor().CGColor)
     let imageView: UIImageView = UIImageView(frame: CGRectZero)
     
-    private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-    private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.rawValue)
-    private var frequencyVelocityPairs = [FrequencyAmplitudePair]()
+    private var frequencyAplitudePairs = [FrequencyAmplitudePair]()
     
-    private func imageFromARGB32Bitmap(pixels:[PixelData], width:UInt, height:UInt)->UIImage
-    {
-        let bitsPerComponent:UInt = 8
-        let bitsPerPixel:UInt = 32
-        
-        var data = pixels // Copy to mutable []
-        let providerRef = CGDataProviderCreateWithCFData(NSData(bytes: &data, length: data.count * sizeof(PixelData)))
-        
-        let cgim = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, width * UInt(sizeof(PixelData)), rgbColorSpace,	bitmapInfo, providerRef, nil, true, kCGRenderingIntentDefault)
-        
-        return UIImage(CGImage: cgim)!;
-    }
+    var operation: SineWaveRendererOperation?
+    let operationQueue = NSOperationQueue()
+    var pendingOperation = false
+
     
     override func didMoveToSuperview()
     {
@@ -43,31 +32,81 @@ class SineWaveRenderer: UIControl
         imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
     }
     
-    func setFrequencyAmplitudePairs(value: [FrequencyAmplitudePair])
-    {
-        self.frequencyVelocityPairs = value
-        
-        drawSineWave()
-    }
     
-    final func drawSineWave()
+    final func setFrequencyAmplitudePairs(value: [FrequencyAmplitudePair])
     {
+        frequencyAplitudePairs = value
+        
         if frame == CGRectZero
         {
             return
         }
+        else if let _operation = operation
+        {
+            if _operation.executing
+            {
+                self.pendingOperation = true
+                return
+            }
+        }
         
-        var pixelArray = [PixelData](count: Int(frame.width * frame.height), repeatedValue: PixelData(a: 0, r:0, g: 0, b: 0));
+        operation = SineWaveRendererOperation(frequencyAplitudePairs: frequencyAplitudePairs, width: Int(frame.width), height: Int(frame.height))
+        
+        operation?.completionBlock = completionBlock
+        
+        operationQueue.addOperation(operation!)
+    }
+    
+    final func completionBlock()
+    {
+        if let _operation = operation
+        {
+            dispatch_async(dispatch_get_main_queue(), {
+                self.imageView.image = _operation.finalImage
+                
+                if self.pendingOperation
+                {
+                    self.pendingOperation = false;
+                    self.setFrequencyAmplitudePairs(self.frequencyAplitudePairs)
+                }
+            })
+        }
+    }
+    
+}
+
+class SineWaveRendererOperation: NSOperation
+{
+    private let colorRef = CGColorGetComponents(UIColor.yellowColor().CGColor)
+    private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+    private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.rawValue)
+    
+    private var frequencyAplitudePairs: [FrequencyAmplitudePair]!
+    private var width: Int!
+    private var height: Int!
+    
+    var finalImage: UIImage?
+    
+    init (frequencyAplitudePairs: [FrequencyAmplitudePair], width: Int, height: Int)
+    {
+        self.frequencyAplitudePairs = frequencyAplitudePairs
+        self.width = width
+        self.height = height
+    }
+    
+    override func main() -> ()
+    {
+        var pixelArray = [PixelData](count: width * height, repeatedValue: PixelData(a: 0, r:0, g: 0, b: 0));
         var previousCurveY:Double!
         
-        for i in 1 ..< Int(frame.width)
+        for i in 1 ..< width
         {
             let scale = M_PI * 5
             let curveX = Double(i)
             
-            var curveY = Double(frame.height / 2)
+            var curveY = Double(height / 2)
             
-            for pair in frequencyVelocityPairs
+            for pair in frequencyAplitudePairs
             {
                 let frequency = Double(pair.frequency)
                 let velocity = Double(pair.amplitude)
@@ -83,20 +122,48 @@ class SineWaveRenderer: UIControl
             // draw line from previous
             for yy in Int(min(previousCurveY, curveY)) ... Int(max(previousCurveY, curveY))
             {
-                let pixelIndex : Int = (yy * Int(frame.width) + i);
+                let pixelIndex : Int = (yy * width + i);
                 
                 pixelArray[pixelIndex].r = UInt8(255 * colorRef[0]);
                 pixelArray[pixelIndex].g = UInt8(255 * colorRef[1]);
                 pixelArray[pixelIndex].b = UInt8(255 * colorRef[2]);
+                
+                let pixelIndex2 : Int = pixelIndex + 1
+                if pixelIndex2 < pixelArray.count
+                {
+                    pixelArray[pixelIndex2].r = UInt8(255 * colorRef[0]);
+                    pixelArray[pixelIndex2].g = UInt8(255 * colorRef[1]);
+                    pixelArray[pixelIndex2].b = UInt8(255 * colorRef[2]);
+                }
+                
+                let pixelIndex3 : Int = ((yy + 1) * width + i);
+                if pixelIndex3 < pixelArray.count
+                {
+                    pixelArray[pixelIndex3].r = UInt8(255 * colorRef[0]);
+                    pixelArray[pixelIndex3].g = UInt8(255 * colorRef[1]);
+                    pixelArray[pixelIndex3].b = UInt8(255 * colorRef[2]);
+                }
             }
             
             previousCurveY = curveY
         }
         
-        let outputImage = imageFromARGB32Bitmap(pixelArray, width: UInt(frame.width), height: UInt(frame.height))
-        
-        imageView.image = outputImage;
+        finalImage = imageFromARGB32Bitmap(pixelArray, width: UInt(width), height: UInt(height))
     }
+    
+    private func imageFromARGB32Bitmap(pixels:[PixelData], width:UInt, height:UInt)->UIImage
+    {
+        let bitsPerComponent:UInt = 8
+        let bitsPerPixel:UInt = 32
+        
+        var data = pixels // Copy to mutable []
+        let providerRef = CGDataProviderCreateWithCFData(NSData(bytes: &data, length: data.count * sizeof(PixelData)))
+        
+        let cgim = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, width * UInt(sizeof(PixelData)), rgbColorSpace,	bitmapInfo, providerRef, nil, true, kCGRenderingIntentDefault)
+        
+        return UIImage(CGImage: cgim)!;
+    }
+    
 }
 
 struct PixelData
