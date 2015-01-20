@@ -30,7 +30,7 @@ class ToneWidget: UIControl
         amplitudeDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
         
         frequencyDial.currentValue = 0.25 * Float(channelNumber % 4 + 1)
-        amplitudeDial.currentValue = 0.25 * Float(4 - channelNumber % 4)
+        amplitudeDial.currentValue = 0.25 //* Float(4 - channelNumber % 4)
         
         dialChangeHander()
     }
