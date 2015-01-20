@@ -8,23 +8,23 @@
 
 class SoundGenerator : NSObject
 {
-    var oscillators = [FMSynth]()
+    var oscillators = [Synth]()
     
     final func setUp()
     {
         for i in 0 ..< Constants.numInstruments
         {
-            let fmOscillator = FMSynth()
-            AKOrchestra.addInstrument(fmOscillator)
+            let synth = Synth()
+            AKOrchestra.addInstrument(synth)
             
-            oscillators.append(fmOscillator)
+            oscillators.append(synth)
         }
 
         AKOrchestra.start()
 
-        for fmOscillator in oscillators
+        for oscillator in oscillators
         {
-            fmOscillator.play()
+            oscillator.play()
         }
     }
     
@@ -40,11 +40,11 @@ class SoundGenerator : NSObject
 }
 
 
-class FMSynth: AKInstrument
+class Synth: AKInstrument
 {
  
     var frequency = AKInstrumentProperty(value: 0,  minimum: 0, maximum: Constants.frequencyScale)
-    var amplitude = AKInstrumentProperty(value: 0, minimum: 0,   maximum: 0.25)
+    var amplitude = AKInstrumentProperty(value: 0,  minimum: 0, maximum: 0.25)
     
     override init()
     {
@@ -53,12 +53,13 @@ class FMSynth: AKInstrument
         addProperty(frequency)
         addProperty(amplitude)
         
-        let fmOscillator = AKFMOscillator()
+        let oscillator = AKOscillator()
         
-        fmOscillator.baseFrequency = frequency
-        fmOscillator.amplitude = amplitude
+        oscillator.frequency = frequency
+        oscillator.amplitude = amplitude
         
-        connect(fmOscillator)
-        connect(AKAudioOutput(audioSource: fmOscillator))
+        connect(oscillator)
+        connect(AKAudioOutput(audioSource: oscillator))
     }
 }
+
