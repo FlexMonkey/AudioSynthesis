@@ -50,16 +50,12 @@ class Synth: AKInstrument
     {
         super.init()
         
-        addProperty(frequency)
-        addProperty(amplitude)
-        
         let oscillator = AKOscillator()
         
         oscillator.frequency = frequency
         oscillator.amplitude = amplitude
         
-        connect(oscillator)
-        connect(AKAudioOutput(audioSource: oscillator))
+        setAudioOutput(oscillator)
     }
 }
 

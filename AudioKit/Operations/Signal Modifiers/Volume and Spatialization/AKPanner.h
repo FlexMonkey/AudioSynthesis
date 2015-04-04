@@ -2,7 +2,8 @@
 //  AKPanner.h
 //  AudioKit
 //
-//  Auto-generated on 1/3/15.
+//  Auto-generated on 2/19/15.
+//  Customized by Aurelius Prochazk to add type helpers
 //  Copyright (c) 2015 Aurelius Prochazka. All rights reserved.
 //
 
@@ -15,13 +16,28 @@
  */
 
 @interface AKPanner : AKStereoAudio
+
+// Type Helpers
+
+/// Maintains equal power during panning
++ (AKConstant *)panMethodForEqualPower;
+
+/// Square root method for determining pan output
++ (AKConstant *)panMethodForSquareRoot;
+
+/// Straight linear variation in the panning
++ (AKConstant *)panMethodForLinear;
+
+/// Another equal power method
++ (AKConstant *)panMethodForEqualPowerAlternate;
+
 /// Instantiates the panner with all values
 /// @param input Source signal. [Default Value: ]
 /// @param pan From hard left (-1) to middle (0) to hard right (1). [Default Value: 0]
 /// @param panMethod AKPanMethod can be EqualPower, SquareRoot, Linear, AltEqualPower [Default Value: AKPanMethodEqualPower]
 - (instancetype)initWithInput:(AKParameter *)input
                           pan:(AKParameter *)pan
-                    panMethod:(AKPanMethod)panMethod;
+                    panMethod:(AKConstant *)panMethod;
 
 /// Instantiates the panner with default values
 /// @param input Source signal.
@@ -32,18 +48,18 @@
 + (instancetype)pannerWithInput:(AKParameter *)input;
 
 /// From hard left (-1) to middle (0) to hard right (1). [Default Value: 0]
-@property AKParameter *pan;
+@property (nonatomic) AKParameter *pan;
 
 /// Set an optional pan
 /// @param pan From hard left (-1) to middle (0) to hard right (1). [Default Value: 0]
 - (void)setOptionalPan:(AKParameter *)pan;
 
 /// AKPanMethod can be EqualPower, SquareRoot, Linear, AltEqualPower [Default Value: AKPanMethodEqualPower]
-@property AKPanMethod panMethod;
+@property (nonatomic) AKConstant *panMethod;
 
 /// Set an optional pan method
 /// @param panMethod AKPanMethod can be EqualPower, SquareRoot, Linear, AltEqualPower [Default Value: AKPanMethodEqualPower]
-- (void)setOptionalPanMethod:(AKPanMethod)panMethod;
+- (void)setOptionalPanMethod:(AKConstant *)panMethod;
 
 
 

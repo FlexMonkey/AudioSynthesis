@@ -2,7 +2,7 @@
 //  AKLine.m
 //  AudioKit
 //
-//  Auto-generated on 1/3/15.
+//  Auto-generated on 2/18/15.
 //  Copyright (c) 2015 Aurelius Prochazka. All rights reserved.
 //
 //  Implementation of Csound's line:
@@ -23,7 +23,8 @@
         _firstPoint = firstPoint;
         _secondPoint = secondPoint;
         _durationBetweenPoints = durationBetweenPoints;
-    }
+        [self setUpConnections];
+}
     return self;
 }
 
@@ -35,6 +36,7 @@
         _firstPoint = akp(0);
         _secondPoint = akp(1);
         _durationBetweenPoints = akp(1);
+        [self setUpConnections];
     }
     return self;
 }
@@ -44,27 +46,71 @@
     return [[AKLine alloc] init];
 }
 
-- (void)setOptionalFirstPoint:(AKConstant *)firstPoint {
+- (void)setFirstPoint:(AKConstant *)firstPoint {
     _firstPoint = firstPoint;
-}
-- (void)setOptionalSecondPoint:(AKConstant *)secondPoint {
-    _secondPoint = secondPoint;
-}
-- (void)setOptionalDurationBetweenPoints:(AKConstant *)durationBetweenPoints {
-    _durationBetweenPoints = durationBetweenPoints;
+    [self setUpConnections];
 }
 
-- (NSString *)stringForCSD {
+- (void)setOptionalFirstPoint:(AKConstant *)firstPoint {
+    [self setFirstPoint:firstPoint];
+}
+
+- (void)setSecondPoint:(AKConstant *)secondPoint {
+    _secondPoint = secondPoint;
+    [self setUpConnections];
+}
+
+- (void)setOptionalSecondPoint:(AKConstant *)secondPoint {
+    [self setSecondPoint:secondPoint];
+}
+
+- (void)setDurationBetweenPoints:(AKConstant *)durationBetweenPoints {
+    _durationBetweenPoints = durationBetweenPoints;
+    [self setUpConnections];
+}
+
+- (void)setOptionalDurationBetweenPoints:(AKConstant *)durationBetweenPoints {
+    [self setDurationBetweenPoints:durationBetweenPoints];
+}
+
+
+- (void)setUpConnections
+{
+    self.state = @"connectable";
+    self.dependencies = @[_firstPoint, _secondPoint, _durationBetweenPoints];
+}
+
+- (NSString *)inlineStringForCSD
+{
+    NSMutableString *inlineCSDString = [[NSMutableString alloc] init];
+
+    [inlineCSDString appendString:@"line("];
+    [inlineCSDString appendString:[self inputsString]];
+    [inlineCSDString appendString:@")"];
+
+    return inlineCSDString;
+}
+
+
+- (NSString *)stringForCSD
+{
     NSMutableString *csdString = [[NSMutableString alloc] init];
 
     [csdString appendFormat:@"%@ line ", self];
-
-    [csdString appendFormat:@"%@, ", _firstPoint];
-    
-    [csdString appendFormat:@"%@, ", _durationBetweenPoints];
-    
-    [csdString appendFormat:@"%@", _secondPoint];
+    [csdString appendString:[self inputsString]];
     return csdString;
+}
+
+- (NSString *)inputsString {
+    NSMutableString *inputsString = [[NSMutableString alloc] init];
+
+    
+    [inputsString appendFormat:@"%@, ", _firstPoint];
+    
+    [inputsString appendFormat:@"%@, ", _durationBetweenPoints];
+    
+    [inputsString appendFormat:@"%@", _secondPoint];
+    return inputsString;
 }
 
 @end

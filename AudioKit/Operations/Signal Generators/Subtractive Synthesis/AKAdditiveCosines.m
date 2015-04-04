@@ -2,7 +2,7 @@
 //  AKAdditiveCosines.m
 //  AudioKit
 //
-//  Auto-generated on 1/3/15.
+//  Auto-generated on 2/20/15.
 //  Copyright (c) 2015 Aurelius Prochazka. All rights reserved.
 //
 //  Implementation of Csound's gbuzz:
@@ -14,10 +14,10 @@
 
 @implementation AKAdditiveCosines
 {
-    AKFunctionTable * _cosineTable;
+    AKTable *_cosineTable;
 }
 
-- (instancetype)initWithCosineTable:(AKFunctionTable *)cosineTable
+- (instancetype)initWithCosineTable:(AKTable *)cosineTable
                      harmonicsCount:(AKParameter *)harmonicsCount
                  firstHarmonicIndex:(AKParameter *)firstHarmonicIndex
                   partialMultiplier:(AKParameter *)partialMultiplier
@@ -34,11 +34,12 @@
         _fundamentalFrequency = fundamentalFrequency;
         _amplitude = amplitude;
         _phase = phase;
-    }
+        [self setUpConnections];
+}
     return self;
 }
 
-- (instancetype)initWithCosineTable:(AKFunctionTable *)cosineTable
+- (instancetype)initWithCosineTable:(AKTable *)cosineTable
 {
     self = [super initWithString:[self operationName]];
     if (self) {
@@ -50,65 +51,128 @@
         _fundamentalFrequency = akp(220);
         _amplitude = akp(1);
         _phase = akp(0);
+        [self setUpConnections];
     }
     return self;
 }
 
-+ (instancetype)cosinesWithCosineTable:(AKFunctionTable *)cosineTable
++ (instancetype)cosinesWithCosineTable:(AKTable *)cosineTable
 {
     return [[AKAdditiveCosines alloc] initWithCosineTable:cosineTable];
 }
 
-- (void)setOptionalHarmonicsCount:(AKParameter *)harmonicsCount {
+- (void)setHarmonicsCount:(AKParameter *)harmonicsCount {
     _harmonicsCount = harmonicsCount;
-}
-- (void)setOptionalFirstHarmonicIndex:(AKParameter *)firstHarmonicIndex {
-    _firstHarmonicIndex = firstHarmonicIndex;
-}
-- (void)setOptionalPartialMultiplier:(AKParameter *)partialMultiplier {
-    _partialMultiplier = partialMultiplier;
-}
-- (void)setOptionalFundamentalFrequency:(AKParameter *)fundamentalFrequency {
-    _fundamentalFrequency = fundamentalFrequency;
-}
-- (void)setOptionalAmplitude:(AKParameter *)amplitude {
-    _amplitude = amplitude;
-}
-- (void)setOptionalPhase:(AKConstant *)phase {
-    _phase = phase;
+    [self setUpConnections];
 }
 
-- (NSString *)stringForCSD {
+- (void)setOptionalHarmonicsCount:(AKParameter *)harmonicsCount {
+    [self setHarmonicsCount:harmonicsCount];
+}
+
+- (void)setFirstHarmonicIndex:(AKParameter *)firstHarmonicIndex {
+    _firstHarmonicIndex = firstHarmonicIndex;
+    [self setUpConnections];
+}
+
+- (void)setOptionalFirstHarmonicIndex:(AKParameter *)firstHarmonicIndex {
+    [self setFirstHarmonicIndex:firstHarmonicIndex];
+}
+
+- (void)setPartialMultiplier:(AKParameter *)partialMultiplier {
+    _partialMultiplier = partialMultiplier;
+    [self setUpConnections];
+}
+
+- (void)setOptionalPartialMultiplier:(AKParameter *)partialMultiplier {
+    [self setPartialMultiplier:partialMultiplier];
+}
+
+- (void)setFundamentalFrequency:(AKParameter *)fundamentalFrequency {
+    _fundamentalFrequency = fundamentalFrequency;
+    [self setUpConnections];
+}
+
+- (void)setOptionalFundamentalFrequency:(AKParameter *)fundamentalFrequency {
+    [self setFundamentalFrequency:fundamentalFrequency];
+}
+
+- (void)setAmplitude:(AKParameter *)amplitude {
+    _amplitude = amplitude;
+    [self setUpConnections];
+}
+
+- (void)setOptionalAmplitude:(AKParameter *)amplitude {
+    [self setAmplitude:amplitude];
+}
+
+- (void)setPhase:(AKConstant *)phase {
+    _phase = phase;
+    [self setUpConnections];
+}
+
+- (void)setOptionalPhase:(AKConstant *)phase {
+    [self setPhase:phase];
+}
+
+
+- (void)setUpConnections
+{
+    self.state = @"connectable";
+    self.dependencies = @[_cosineTable, _harmonicsCount, _firstHarmonicIndex, _partialMultiplier, _fundamentalFrequency, _amplitude, _phase];
+}
+
+- (NSString *)inlineStringForCSD
+{
+    NSMutableString *inlineCSDString = [[NSMutableString alloc] init];
+
+    [inlineCSDString appendString:@"gbuzz("];
+    [inlineCSDString appendString:[self inputsString]];
+    [inlineCSDString appendString:@")"];
+
+    return inlineCSDString;
+}
+
+
+- (NSString *)stringForCSD
+{
     NSMutableString *csdString = [[NSMutableString alloc] init];
 
     [csdString appendFormat:@"%@ gbuzz ", self];
+    [csdString appendString:[self inputsString]];
+    return csdString;
+}
 
-    [csdString appendFormat:@"%@, ", _amplitude];
+- (NSString *)inputsString {
+    NSMutableString *inputsString = [[NSMutableString alloc] init];
+
     
-    [csdString appendFormat:@"%@, ", _fundamentalFrequency];
+    [inputsString appendFormat:@"%@, ", _amplitude];
+    
+    [inputsString appendFormat:@"%@, ", _fundamentalFrequency];
     
     if ([_harmonicsCount class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _harmonicsCount];
+        [inputsString appendFormat:@"%@, ", _harmonicsCount];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _harmonicsCount];
+        [inputsString appendFormat:@"AKControl(%@), ", _harmonicsCount];
     }
 
     if ([_firstHarmonicIndex class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _firstHarmonicIndex];
+        [inputsString appendFormat:@"%@, ", _firstHarmonicIndex];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _firstHarmonicIndex];
+        [inputsString appendFormat:@"AKControl(%@), ", _firstHarmonicIndex];
     }
 
     if ([_partialMultiplier class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _partialMultiplier];
+        [inputsString appendFormat:@"%@, ", _partialMultiplier];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _partialMultiplier];
+        [inputsString appendFormat:@"AKControl(%@), ", _partialMultiplier];
     }
 
-    [csdString appendFormat:@"%@, ", _cosineTable];
+    [inputsString appendFormat:@"%@, ", _cosineTable];
     
-    [csdString appendFormat:@"%@", _phase];
-    return csdString;
+    [inputsString appendFormat:@"%@", _phase];
+    return inputsString;
 }
 
 @end

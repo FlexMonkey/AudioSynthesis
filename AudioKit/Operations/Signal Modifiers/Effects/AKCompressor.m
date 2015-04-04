@@ -2,7 +2,7 @@
 //  AKCompressor.m
 //  AudioKit
 //
-//  Auto-generated on 1/3/15.
+//  Auto-generated on 2/18/15.
 //  Copyright (c) 2015 Aurelius Prochazka. All rights reserved.
 //
 //  Implementation of Csound's compress:
@@ -39,7 +39,8 @@
         _attackTime = attackTime;
         _releaseTime = releaseTime;
         _lookAheadTime = lookAheadTime;
-    }
+        [self setUpConnections];
+}
     return self;
 }
 
@@ -58,94 +59,163 @@
         _attackTime = akp(0.1);
         _releaseTime = akp(1);
         _lookAheadTime = akp(0.05);
+        [self setUpConnections];
     }
     return self;
 }
 
 + (instancetype)compressorWithInput:(AKParameter *)input
-                   controllingInput:(AKParameter *)controllingInput
+                  controllingInput:(AKParameter *)controllingInput
 {
     return [[AKCompressor alloc] initWithInput:input
-                              controllingInput:controllingInput];
+                  controllingInput:controllingInput];
+}
+
+- (void)setThreshold:(AKParameter *)threshold {
+    _threshold = threshold;
+    [self setUpConnections];
 }
 
 - (void)setOptionalThreshold:(AKParameter *)threshold {
-    _threshold = threshold;
-}
-- (void)setOptionalLowKnee:(AKParameter *)lowKnee {
-    _lowKnee = lowKnee;
-}
-- (void)setOptionalHighKnee:(AKParameter *)highKnee {
-    _highKnee = highKnee;
-}
-- (void)setOptionalCompressionRatio:(AKParameter *)compressionRatio {
-    _compressionRatio = compressionRatio;
-}
-- (void)setOptionalAttackTime:(AKParameter *)attackTime {
-    _attackTime = attackTime;
-}
-- (void)setOptionalReleaseTime:(AKParameter *)releaseTime {
-    _releaseTime = releaseTime;
-}
-- (void)setOptionalLookAheadTime:(AKConstant *)lookAheadTime {
-    _lookAheadTime = lookAheadTime;
+    [self setThreshold:threshold];
 }
 
-- (NSString *)stringForCSD {
+- (void)setLowKnee:(AKParameter *)lowKnee {
+    _lowKnee = lowKnee;
+    [self setUpConnections];
+}
+
+- (void)setOptionalLowKnee:(AKParameter *)lowKnee {
+    [self setLowKnee:lowKnee];
+}
+
+- (void)setHighKnee:(AKParameter *)highKnee {
+    _highKnee = highKnee;
+    [self setUpConnections];
+}
+
+- (void)setOptionalHighKnee:(AKParameter *)highKnee {
+    [self setHighKnee:highKnee];
+}
+
+- (void)setCompressionRatio:(AKParameter *)compressionRatio {
+    _compressionRatio = compressionRatio;
+    [self setUpConnections];
+}
+
+- (void)setOptionalCompressionRatio:(AKParameter *)compressionRatio {
+    [self setCompressionRatio:compressionRatio];
+}
+
+- (void)setAttackTime:(AKParameter *)attackTime {
+    _attackTime = attackTime;
+    [self setUpConnections];
+}
+
+- (void)setOptionalAttackTime:(AKParameter *)attackTime {
+    [self setAttackTime:attackTime];
+}
+
+- (void)setReleaseTime:(AKParameter *)releaseTime {
+    _releaseTime = releaseTime;
+    [self setUpConnections];
+}
+
+- (void)setOptionalReleaseTime:(AKParameter *)releaseTime {
+    [self setReleaseTime:releaseTime];
+}
+
+- (void)setLookAheadTime:(AKConstant *)lookAheadTime {
+    _lookAheadTime = lookAheadTime;
+    [self setUpConnections];
+}
+
+- (void)setOptionalLookAheadTime:(AKConstant *)lookAheadTime {
+    [self setLookAheadTime:lookAheadTime];
+}
+
+
+- (void)setUpConnections
+{
+    self.state = @"connectable";
+    self.dependencies = @[_input, _controllingInput, _threshold, _lowKnee, _highKnee, _compressionRatio, _attackTime, _releaseTime, _lookAheadTime];
+}
+
+- (NSString *)inlineStringForCSD
+{
+    NSMutableString *inlineCSDString = [[NSMutableString alloc] init];
+
+    [inlineCSDString appendString:@"compress("];
+    [inlineCSDString appendString:[self inputsString]];
+    [inlineCSDString appendString:@")"];
+
+    return inlineCSDString;
+}
+
+
+- (NSString *)stringForCSD
+{
     NSMutableString *csdString = [[NSMutableString alloc] init];
-    
+
     [csdString appendFormat:@"%@ compress ", self];
+    [csdString appendString:[self inputsString]];
+    return csdString;
+}
+
+- (NSString *)inputsString {
+    NSMutableString *inputsString = [[NSMutableString alloc] init];
+
     
     if ([_input class] == [AKAudio class]) {
-        [csdString appendFormat:@"%@, ", _input];
+        [inputsString appendFormat:@"%@, ", _input];
     } else {
-        [csdString appendFormat:@"AKAudio(%@), ", _input];
+        [inputsString appendFormat:@"AKAudio(%@), ", _input];
     }
-    
+
     if ([_controllingInput class] == [AKAudio class]) {
-        [csdString appendFormat:@"%@, ", _controllingInput];
+        [inputsString appendFormat:@"%@, ", _controllingInput];
     } else {
-        [csdString appendFormat:@"AKAudio(%@), ", _controllingInput];
+        [inputsString appendFormat:@"AKAudio(%@), ", _controllingInput];
     }
-    
+
     if ([_threshold class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _threshold];
+        [inputsString appendFormat:@"%@, ", _threshold];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _threshold];
+        [inputsString appendFormat:@"AKControl(%@), ", _threshold];
     }
-    
+
     if ([_lowKnee class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _lowKnee];
+        [inputsString appendFormat:@"%@, ", _lowKnee];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _lowKnee];
+        [inputsString appendFormat:@"AKControl(%@), ", _lowKnee];
     }
-    
+
     if ([_highKnee class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _highKnee];
+        [inputsString appendFormat:@"%@, ", _highKnee];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _highKnee];
+        [inputsString appendFormat:@"AKControl(%@), ", _highKnee];
     }
-    
+
     if ([_compressionRatio class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _compressionRatio];
+        [inputsString appendFormat:@"%@, ", _compressionRatio];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _compressionRatio];
+        [inputsString appendFormat:@"AKControl(%@), ", _compressionRatio];
     }
-    
+
     if ([_attackTime class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _attackTime];
+        [inputsString appendFormat:@"%@, ", _attackTime];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _attackTime];
+        [inputsString appendFormat:@"AKControl(%@), ", _attackTime];
     }
-    
+
     if ([_releaseTime class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _releaseTime];
+        [inputsString appendFormat:@"%@, ", _releaseTime];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _releaseTime];
+        [inputsString appendFormat:@"AKControl(%@), ", _releaseTime];
     }
-    
-    [csdString appendFormat:@"%@", _lookAheadTime];
-    return csdString;
+
+    [inputsString appendFormat:@"%@", _lookAheadTime];
+    return inputsString;
 }
 
 @end

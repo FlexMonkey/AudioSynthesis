@@ -13,7 +13,12 @@
     AKStereoAudio *aStereoOutput;
 }
 
-- (instancetype)initWithAudioSource:(AKAudio *)audioSource
+- (instancetype)initWithInput:(AKParameter *)source
+{
+    return [self initWithLeftAudio:source rightAudio:source];
+}
+
+- (instancetype)initWithAudioSource:(AKParameter *)audioSource
 {
     return [self initWithLeftAudio:audioSource rightAudio:audioSource];
 }
@@ -22,17 +27,21 @@
     self = [super initWithString:[self operationName]];
     if (self) {
         aStereoOutput = stereoAudio;
+        self.state = @"connectable";
+        self.dependencies = @[stereoAudio];
     }
     return self;
 }
 
-- (instancetype)initWithLeftAudio:(AKAudio *)leftAudio
-                       rightAudio:(AKAudio *)rightAudio
+- (instancetype)initWithLeftAudio:(AKParameter *)leftAudio
+                       rightAudio:(AKParameter *)rightAudio
 {
     self = [super initWithString:[self operationName]];
     if (self) {
         aStereoOutput = [[AKStereoAudio alloc] initWithLeftAudio:leftAudio
                                                       rightAudio:rightAudio];
+        self.state = @"connectable";
+        self.dependencies = @[leftAudio, rightAudio];
     }
     return self; 
 }

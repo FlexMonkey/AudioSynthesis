@@ -2,7 +2,7 @@
 //  AKVibes.m
 //  AudioKit
 //
-//  Auto-generated on 1/3/15.
+//  Auto-generated on 3/2/15.
 //  Copyright (c) 2015 Aurelius Prochazka. All rights reserved.
 //
 //  Implementation of Csound's vibes:
@@ -12,13 +12,15 @@
 #import "AKVibes.h"
 #import "AKManager.h"
 
-@implementation AKVibes
+@implementation AKVibes {
+    AKSoundFileTable *_strikeImpulseTable;
+}
 
 - (instancetype)initWithFrequency:(AKParameter *)frequency
                         amplitude:(AKParameter *)amplitude
                     stickHardness:(AKConstant *)stickHardness
                    strikePosition:(AKConstant *)strikePosition
-                tremoloShapeTable:(AKFunctionTable *)tremoloShapeTable
+                     tremoloShape:(AKTable *)tremoloShape
                  tremoloFrequency:(AKParameter *)tremoloFrequency
                  tremoloAmplitude:(AKParameter *)tremoloAmplitude
 {
@@ -28,10 +30,20 @@
         _amplitude = amplitude;
         _stickHardness = stickHardness;
         _strikePosition = strikePosition;
-        _tremoloShapeTable = tremoloShapeTable;
+        _tremoloShape = tremoloShape;
         _tremoloFrequency = tremoloFrequency;
         _tremoloAmplitude = tremoloAmplitude;
-    }
+        
+        // Constant Values
+        NSString *file = [[NSBundle mainBundle] pathForResource:@"marmstk1" ofType:@"wav"];
+        if (!file) {
+            file = @"CsoundLib64.framework/Sounds/marmstk1.wav";
+        }
+        
+        _strikeImpulseTable = [[AKSoundFileTable alloc] initWithFilename:file];
+        
+        [self setUpConnections];
+}
     return self;
 }
 
@@ -44,10 +56,20 @@
         _amplitude = akp(1.0);
         _stickHardness = akp(0.5);
         _strikePosition = akp(0.2);
-        _tremoloShapeTable = [AKManager standardSineWave];
+        _tremoloShape = [AKTable standardSineWave];
     
         _tremoloFrequency = akp(0);
         _tremoloAmplitude = akp(0);
+        
+        // Constant Values
+        NSString *file = [[NSBundle mainBundle] pathForResource:@"marmstk1" ofType:@"wav"];
+        if (!file) {
+            file = @"CsoundLib64.framework/Sounds/marmstk1.wav";
+        }
+        
+        _strikeImpulseTable = [[AKSoundFileTable alloc] initWithFilename:file];
+        
+        [self setUpConnections];
     }
     return self;
 }
@@ -57,78 +79,136 @@
     return [[AKVibes alloc] init];
 }
 
-- (void)setOptionalFrequency:(AKParameter *)frequency {
+- (void)setFrequency:(AKParameter *)frequency {
     _frequency = frequency;
-}
-- (void)setOptionalAmplitude:(AKParameter *)amplitude {
-    _amplitude = amplitude;
-}
-- (void)setOptionalStickHardness:(AKConstant *)stickHardness {
-    _stickHardness = stickHardness;
-}
-- (void)setOptionalStrikePosition:(AKConstant *)strikePosition {
-    _strikePosition = strikePosition;
-}
-- (void)setOptionalTremoloShapeTable:(AKFunctionTable *)tremoloShapeTable {
-    _tremoloShapeTable = tremoloShapeTable;
-}
-- (void)setOptionalTremoloFrequency:(AKParameter *)tremoloFrequency {
-    _tremoloFrequency = tremoloFrequency;
-}
-- (void)setOptionalTremoloAmplitude:(AKParameter *)tremoloAmplitude {
-    _tremoloAmplitude = tremoloAmplitude;
+    [self setUpConnections];
 }
 
-- (NSString *)stringForCSD {
+- (void)setOptionalFrequency:(AKParameter *)frequency {
+    [self setFrequency:frequency];
+}
+
+- (void)setAmplitude:(AKParameter *)amplitude {
+    _amplitude = amplitude;
+    [self setUpConnections];
+}
+
+- (void)setOptionalAmplitude:(AKParameter *)amplitude {
+    [self setAmplitude:amplitude];
+}
+
+- (void)setStickHardness:(AKConstant *)stickHardness {
+    _stickHardness = stickHardness;
+    [self setUpConnections];
+}
+
+- (void)setOptionalStickHardness:(AKConstant *)stickHardness {
+    [self setStickHardness:stickHardness];
+}
+
+- (void)setStrikePosition:(AKConstant *)strikePosition {
+    _strikePosition = strikePosition;
+    [self setUpConnections];
+}
+
+- (void)setOptionalStrikePosition:(AKConstant *)strikePosition {
+    [self setStrikePosition:strikePosition];
+}
+
+- (void)setTremoloShape:(AKTable *)tremoloShape {
+    _tremoloShape = tremoloShape;
+    [self setUpConnections];
+}
+
+- (void)setOptionalTremoloShape:(AKTable *)tremoloShape {
+    [self setTremoloShape:tremoloShape];
+}
+
+- (void)setTremoloFrequency:(AKParameter *)tremoloFrequency {
+    _tremoloFrequency = tremoloFrequency;
+    [self setUpConnections];
+}
+
+- (void)setOptionalTremoloFrequency:(AKParameter *)tremoloFrequency {
+    [self setTremoloFrequency:tremoloFrequency];
+}
+
+- (void)setTremoloAmplitude:(AKParameter *)tremoloAmplitude {
+    _tremoloAmplitude = tremoloAmplitude;
+    [self setUpConnections];
+}
+
+- (void)setOptionalTremoloAmplitude:(AKParameter *)tremoloAmplitude {
+    [self setTremoloAmplitude:tremoloAmplitude];
+}
+
+
+- (void)setUpConnections
+{
+    self.state = @"connectable";
+    self.dependencies = @[_frequency, _amplitude, _stickHardness, _strikePosition, _tremoloFrequency, _tremoloAmplitude];
+}
+
+- (NSString *)inlineStringForCSD
+{
+    NSMutableString *inlineCSDString = [[NSMutableString alloc] init];
+
+    [inlineCSDString appendString:@"vibes("];
+    [inlineCSDString appendString:[self inputsString]];
+    [inlineCSDString appendString:@")"];
+
+    return inlineCSDString;
+}
+
+
+- (NSString *)stringForCSD
+{
     NSMutableString *csdString = [[NSMutableString alloc] init];
 
-    // Constant Values  
-    NSString *file = [[NSBundle mainBundle] pathForResource:@"marmstk1" ofType:@"wav"];
-    if (!file) {
-        file = @"CsoundLib64.framework/Sounds/marmstk1.wav";
-    }
-
-    AKSoundFile *_strikeImpulseTable;
-    _strikeImpulseTable = [[AKSoundFile alloc] initWithFilename:file];
-    [csdString appendFormat:@"%@\n", [_strikeImpulseTable stringForCSD]];
-            
-    AKConstant *_maximumDuration = akp(1);        
     [csdString appendFormat:@"%@ vibes ", self];
+    [csdString appendString:[self inputsString]];
+    return csdString;
+}
 
+- (NSString *)inputsString {
+    NSMutableString *inputsString = [[NSMutableString alloc] init];
+    
+    AKConstant *_maximumDuration = akp(1);        
+    
     if ([_amplitude class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _amplitude];
+        [inputsString appendFormat:@"%@, ", _amplitude];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _amplitude];
+        [inputsString appendFormat:@"AKControl(%@), ", _amplitude];
     }
 
     if ([_frequency class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _frequency];
+        [inputsString appendFormat:@"%@, ", _frequency];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _frequency];
+        [inputsString appendFormat:@"AKControl(%@), ", _frequency];
     }
 
-    [csdString appendFormat:@"%@, ", _stickHardness];
+    [inputsString appendFormat:@"%@, ", _stickHardness];
     
-    [csdString appendFormat:@"%@, ", _strikePosition];
+    [inputsString appendFormat:@"%@, ", _strikePosition];
     
-    [csdString appendFormat:@"%@, ", _strikeImpulseTable];
+    [inputsString appendFormat:@"%@, ", _strikeImpulseTable];
     
     if ([_tremoloFrequency class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _tremoloFrequency];
+        [inputsString appendFormat:@"%@, ", _tremoloFrequency];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _tremoloFrequency];
+        [inputsString appendFormat:@"AKControl(%@), ", _tremoloFrequency];
     }
 
     if ([_tremoloAmplitude class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _tremoloAmplitude];
+        [inputsString appendFormat:@"%@, ", _tremoloAmplitude];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _tremoloAmplitude];
+        [inputsString appendFormat:@"AKControl(%@), ", _tremoloAmplitude];
     }
 
-    [csdString appendFormat:@"%@, ", _tremoloShapeTable];
+    [inputsString appendFormat:@"%@, ", _tremoloShape];
     
-    [csdString appendFormat:@"%@", _maximumDuration];
-    return csdString;
+    [inputsString appendFormat:@"%@", _maximumDuration];
+    return inputsString;
 }
 
 @end

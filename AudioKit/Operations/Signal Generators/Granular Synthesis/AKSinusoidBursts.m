@@ -10,8 +10,8 @@
 
 @implementation AKSinusoidBursts
 {
-    AKWeightedSumOfSinusoids *iFnA;
-    AKFunctionTable *iFnB;
+    AKTable *iFnA;
+    AKTable *iFnB;
     AKConstant *iOlaps;
     AKConstant *iTotDur;
     AKControl *kOct;
@@ -24,8 +24,8 @@
     AKParameter *xForm;
 }
 
-- (instancetype)initWithSineTable:(AKWeightedSumOfSinusoids *)sineburstSynthesisTable
-                   riseShapeTable:(AKFunctionTable *)riseShapeTable
+- (instancetype)initWithSineTable:(AKTable *)sineburstSynthesisTable
+                   riseShapeTable:(AKTable *)riseShapeTable
                          overlaps:(AKConstant *)numberOfOverlaps
                         totalTime:(AKConstant *)totalTime
                   octavationIndex:(AKControl *)octavationIndex
@@ -51,6 +51,8 @@
         xAmp = peakAmplitude;
         xFund = fundamentalFrequency;
         xForm = formantFrequency;
+        self.state = @"connectable";
+        self.dependencies = @[iFnA, iFnB, iOlaps, iTotDur, kOct, kBand, kRis, kDur, kDec, xAmp, xFund, xForm];
     }
     return self;
 }

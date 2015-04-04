@@ -33,7 +33,10 @@
 // -----------------------------------------------------------------------------
 
 // The CSD Text representation of the parameter's name
-@property (nonatomic, strong) NSString *parameterString;
+@property NSString *parameterString;
+
+@property NSString *state;
+@property NSArray *dependencies;
 
 /// Helper method to avoid alloc and init each time.
 /// @param name The name of the parameter as it should appear in the output file.
@@ -66,6 +69,9 @@
 
 /// Current value of the parameter.
 @property (nonatomic, assign) float value;
+
+/// Alternative to "value", works better on OSX.
+@property (nonatomic, assign) float floatValue;
 
 /// Start value for initialization.
 @property (nonatomic, assign) float initialValue;
@@ -121,8 +127,8 @@
 - (instancetype)plus:(AKParameter *)additionalParameter;
 
 /// Helper function to create a new AKParameter subtracted from the additional parameter
-/// @param subtractedParameter The subtracted parameter (should be of the same type)
-- (instancetype)minus:(AKParameter *)subtractedParameter;
+/// @param subtrahend The subtracted parameter (should be of the same type)
+- (instancetype)minus:(AKParameter *)subtrahend;
 
 /// Helper function to create a new AKParameter with the output scaled by another parameter
 /// @param scalingFactor The scaling factor should be multiplied by
@@ -134,6 +140,27 @@
 
 /// Helper function to return one-over-this-parameter
 - (instancetype)inverse;
+
+/// Helper function to create an integer
+- (instancetype)floor;
+
+/// Helper function to create an integer
+- (instancetype)round;
+
+/// Helper function to return fractional part
+- (instancetype)fractionalPart;
+
+/// Helper function to return absolute value
+- (instancetype)absoluteValue;
+
+/// Helper function to return natural log
+- (instancetype)log;
+
+/// Helper function to return log base 10
+- (instancetype)log10;
+
+/// Helper function to return square root
+- (instancetype)squareRoot;
 
 /// Helper fucntion to convert logarithmic full scale decibel values to properly scaled amplitude
 - (instancetype)amplitudeFromFullScaleDecibel;
