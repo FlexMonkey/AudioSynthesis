@@ -11,26 +11,44 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AKTypes.h"
-
+# pragma mark - Core Classes
 #import "AKManager.h"
 #import "AKOrchestra.h"
-#import "AKInstrument.h"
-#import "AKSequence.h"
-#import "AKEvent.h"
-#import "AKNote.h"
 
+# pragma mark - Instruments
+#import "AKInstrument.h"
+#import "AKInstrumentProperty.h"
+
+#pragma mark - Notes
+#import "AKNote.h"
+#import "AKNoteProperty.h"
+
+# pragma mark - Parameters
 #import "AKParameter.h"
 #import "AKAudio.h"
 #import "AKControl.h"
-#import "AKInstrumentProperty.h"
 #import "AKConstant.h"
-#import "AKNoteProperty.h"
 
-#import "AKSampler.h"
+# pragma mark - Sequencing
+#import "AKEvent.h"
+#import "AKSequence.h"
 
+#  pragma mark - Tables
+#import "AKSoundFileTable.h"
+#import "AKTable.h"
 
-// Operations
+# pragma mark Table Generators
+#import "AKHarmonicCosineTableGenerator.h"
+#import "AKExponentialTableGenerator.h"
+#import "AKFourierSeriesTableGenerator.h"
+#import "AKLineTableGenerator.h"
+#import "AKRandomDistributionTableGenerator.h"
+#import "AKWindowTableGenerator.h"
+
+// -----------------------------------------------------------------------------
+#  pragma mark - Operations
+// -----------------------------------------------------------------------------
+
 #import "AKParameter+Operation.h"
 
 // Operations - Analysis
@@ -39,53 +57,28 @@
 #import "AKTrackedFrequency.h"
 #import "AKTrackedFrequencyFromFSignal.h"
 
-// Operations - Function Tables
-#import "AKTableValue.h"
-#import "AKTableValueConstant.h"
-#import "AKTableValueControl.h"
-
-// Operations - Function Tables - Generators
-#import "AKAdditiveCosineTable.h"
-#import "AKArrayTable.h"
-#import "AKExponentialCurves.h"
-#import "AKFunctionTable.h"
-#import "AKLineSegments.h"
-#import "AKRandomDistributionTable.h"
-#import "AKSoundFile.h"
-#import "AKWeightedSumOfSinusoids.h"
-#import "AKWindowsTable.h"
-
-// Operations - Function Tables - Loopers
-#import "AKFunctionTableLooper.h"
-#import "AKMonoSoundFileLooper.h"
-#import "AKStereoSoundFileLooper.h"
-
-// Operations - Mathematical Operations
-#import "AKAssignment.h"
-#import "AKScaledControl.h"
-
-// Operations - Mathematical Operations - Mininum and Maximum
-#import "AKMaxAudio.h"
-#import "AKMaxControl.h"
-#import "AKMinAudio.h"
-#import "AKMinControl.h"
-
-// Operations - Mathematical Operations - Mixing
-#import "AKMixedAudio.h"
-#import "AKMixedControl.h"
-#import "AKProduct.h"
-#import "AKSum.h"
-
-// Operations - Phase Vocoder Streaming
-#import "AKAudioFromFSignal.h"
-#import "AKCrossSynthesis.h"
-#import "AKFSignalFromMonoAudio.h"
-#import "AKFSignalFromMonoWithAttackAnalysis.h"
-#import "AKFSignalMix.h"
+// Operations - FFT
+#import "AKCrossSynthesizedFFT.h"
+#import "AKFFT.h"
+#import "AKFFTProcessor.h"
+#import "AKMixedFFT.h"
 #import "AKPhaseLockedVocoder.h"
-#import "AKScaledFSignal.h"
+#import "AKResynthesizedAudio.h"
+#import "AKScaledFFT.h"
 #import "AKSpectralVocoder.h"
-#import "AKWarp.h"
+#import "AKWarpedFFT.h"
+
+// Operations - Math
+#import "AKAssignment.h"
+#import "AKDifference.h"
+#import "AKInverse.h"
+#import "AKMaximum.h"
+#import "AKMinimum.h"
+#import "AKMultipleInputMathOperation.h"
+#import "AKProduct.h"
+#import "AKSingleInputMathOperation.h"
+#import "AKSum.h"
+#import "AKTableValue.h"
 
 // Operations - Signal Generators
 
@@ -97,7 +90,13 @@
 
 // Operations - Signal Generators - Granular Synthesis
 #import "AKGranularSynthesisTexture.h"
+#import "AKGranularSynthesizer.h"
 #import "AKSinusoidBursts.h"
+
+// Operations - Signal Generators - Loopers
+#import "AKMonoSoundFileLooper.h"
+#import "AKStereoSoundFileLooper.h"
+#import "AKTableLooper.h"
 
 // Operations - Signal Generators - Musical Controls
 #import "AKPortamento.h"
@@ -132,18 +131,18 @@
 // Operations - Signal Generators - Physical Models - Waveguide
 #import "AKBeatenPlate.h"
 #import "AKBowedString.h"
+#import "AKFlute.h"
 #import "AKSimpleWaveGuideModel.h"
 
 // Operations - Signal Generators - Random Generators
 #import "AKInterpolatedRandomNumberPulse.h"
 #import "AKJitter.h"
+#import "AKNoise.h"
 #import "AKRandomNumbers.h"
 
 // Operations - Signal Generators - Segment Arrays
-#import "AKExponentialSegmentArray.h"
-#import "AKExponentialSegmentArrayLoop.h"
-#import "AKLinearSegmentArray.h"
-#import "AKLinearSegmentArrayLoop.h"
+#import "AKSegmentArray.h"
+#import "AKSegmentArrayLoop.h"
 
 // Operations - Signal Generators - Subtractive Synthesis
 #import "AKAdditiveCosines.h"
@@ -152,6 +151,7 @@
 #import "AKAudioInput.h"
 #import "AKAudioOutput.h"
 #import "AKFileInput.h"
+#import "AKLog.h"
 #import "AKMP3FileInput.h"
 #import "AKMonoFileInput.h"
 
@@ -174,6 +174,8 @@
 // Operations - Signal Modifiers - Filters
 #import "AKCombFilter.h"
 #import "AKDCBlock.h"
+#import "AKDecimator.h"
+#import "AKDeclick.h"
 #import "AKEqualizerFilter.h"
 #import "AKHighPassFilter.h"
 #import "AKHilbertTransformer.h"
@@ -181,6 +183,7 @@
 #import "AKMoogLadder.h"
 #import "AKMoogVCF.h"
 #import "AKResonantFilter.h"
+#import "AKStringResonator.h"
 #import "AKThreePoleLowpassFilter.h"
 #import "AKVariableFrequencyResponseBandPassFilter.h"
 
@@ -190,9 +193,6 @@
 #import "AKHighPassButterworthFilter.h"
 #import "AKLowPassButterworthFilter.h"
 
-// Operations - Signal Modifiers - Filters - declick
-#import "AKDeclick.h"
-
 // Operations - Signal Modifiers - Reverbs
 #import "AKBallWithinTheBoxReverb.h"
 #import "AKFlatFrequencyResponseReverb.h"
@@ -201,7 +201,7 @@
 
 // Operations - Signal Modifiers - Volume and Spatialization
 #import "AKBalance.h"
+#import "AKMix.h"
 #import "AKPanner.h"
-
 
 #endif

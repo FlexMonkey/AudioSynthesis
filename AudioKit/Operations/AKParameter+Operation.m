@@ -17,16 +17,22 @@
     return basename;
 }
 
+- (NSString *)inlineStringForCSD
+{
+    //Override in subclass
+    return self.parameterString;
+}
+
 - (NSString *)stringForCSD
 {
     //Override in subclass
-    return @"Undefined";
+    return @"";
 }
 
-- (NSString *)udoFile
+- (NSString *)udoString
 {
     //Override in subclass
-    return @"Undefined";
+    return @"";
 }
 
 @end

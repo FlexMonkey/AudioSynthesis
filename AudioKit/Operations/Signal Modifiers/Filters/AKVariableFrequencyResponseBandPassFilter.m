@@ -2,7 +2,9 @@
 //  AKVariableFrequencyResponseBandPassFilter.m
 //  AudioKit
 //
-//  Auto-generated on 1/3/15.
+//  Auto-generated on 2/19/15.
+//  Customized by Aurelius Prochazka to add type helpers
+
 //  Copyright (c) 2015 Aurelius Prochazka. All rights reserved.
 //
 //  Implementation of Csound's resonz:
@@ -17,16 +19,23 @@
     AKParameter * _audioSource;
 }
 
++ (AKConstant *)scalingFactorNone { return akp(0); }
++ (AKConstant *)scalingFactorPeak { return akp(1); }
++ (AKConstant *)scalingFactorRMS  { return akp(2); }
+
 - (instancetype)initWithAudioSource:(AKParameter *)audioSource
                     cutoffFrequency:(AKParameter *)cutoffFrequency
                           bandwidth:(AKParameter *)bandwidth
+                      scalingFactor:(AKConstant *)scalingFactor
 {
     self = [super initWithString:[self operationName]];
     if (self) {
         _audioSource = audioSource;
         _cutoffFrequency = cutoffFrequency;
         _bandwidth = bandwidth;
-    }
+        _scalingFactor = scalingFactor;
+        [self setUpConnections];
+}
     return self;
 }
 
@@ -38,6 +47,8 @@
         // Default Values
         _cutoffFrequency = akp(1000);
         _bandwidth = akp(10);
+        _scalingFactor = akp(0);
+        [self setUpConnections];
     }
     return self;
 }
@@ -47,36 +58,85 @@
     return [[AKVariableFrequencyResponseBandPassFilter alloc] initWithAudioSource:audioSource];
 }
 
-- (void)setOptionalCutoffFrequency:(AKParameter *)cutoffFrequency {
+- (void)setCutoffFrequency:(AKParameter *)cutoffFrequency {
     _cutoffFrequency = cutoffFrequency;
-}
-- (void)setOptionalBandwidth:(AKParameter *)bandwidth {
-    _bandwidth = bandwidth;
+    [self setUpConnections];
 }
 
-- (NSString *)stringForCSD {
+- (void)setOptionalCutoffFrequency:(AKParameter *)cutoffFrequency {
+    [self setCutoffFrequency:cutoffFrequency];
+}
+
+- (void)setBandwidth:(AKParameter *)bandwidth {
+    _bandwidth = bandwidth;
+    [self setUpConnections];
+}
+
+- (void)setOptionalBandwidth:(AKParameter *)bandwidth {
+    [self setBandwidth:bandwidth];
+}
+
+- (void)setScalingFactor:(AKConstant *)scalingFactor {
+    _scalingFactor = scalingFactor;
+    [self setUpConnections];
+}
+
+- (void)setOptionalScalingFactor:(AKConstant *)scalingFactor {
+    [self setScalingFactor:scalingFactor];
+}
+
+
+- (void)setUpConnections
+{
+    self.state = @"connectable";
+    self.dependencies = @[_audioSource, _cutoffFrequency, _bandwidth, _scalingFactor];
+}
+
+- (NSString *)inlineStringForCSD
+{
+    NSMutableString *inlineCSDString = [[NSMutableString alloc] init];
+
+    [inlineCSDString appendString:@"resonz("];
+    [inlineCSDString appendString:[self inputsString]];
+    [inlineCSDString appendString:@")"];
+
+    return inlineCSDString;
+}
+
+
+- (NSString *)stringForCSD
+{
     NSMutableString *csdString = [[NSMutableString alloc] init];
 
     [csdString appendFormat:@"%@ resonz ", self];
+    [csdString appendString:[self inputsString]];
+    return csdString;
+}
 
+- (NSString *)inputsString {
+    NSMutableString *inputsString = [[NSMutableString alloc] init];
+
+    
     if ([_audioSource class] == [AKAudio class]) {
-        [csdString appendFormat:@"%@, ", _audioSource];
+        [inputsString appendFormat:@"%@, ", _audioSource];
     } else {
-        [csdString appendFormat:@"AKAudio(%@), ", _audioSource];
+        [inputsString appendFormat:@"AKAudio(%@), ", _audioSource];
     }
 
     if ([_cutoffFrequency class] == [AKControl class]) {
-        [csdString appendFormat:@"%@, ", _cutoffFrequency];
+        [inputsString appendFormat:@"%@, ", _cutoffFrequency];
     } else {
-        [csdString appendFormat:@"AKControl(%@), ", _cutoffFrequency];
+        [inputsString appendFormat:@"AKControl(%@), ", _cutoffFrequency];
     }
 
     if ([_bandwidth class] == [AKControl class]) {
-        [csdString appendFormat:@"%@", _bandwidth];
+        [inputsString appendFormat:@"%@, ", _bandwidth];
     } else {
-        [csdString appendFormat:@"AKControl(%@)", _bandwidth];
+        [inputsString appendFormat:@"AKControl(%@), ", _bandwidth];
     }
-return csdString;
+
+    [inputsString appendFormat:@"%@", _scalingFactor];
+    return inputsString;
 }
 
 @end

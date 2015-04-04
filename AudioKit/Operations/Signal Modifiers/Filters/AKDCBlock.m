@@ -2,7 +2,7 @@
 //  AKDCBlock.m
 //  AudioKit
 //
-//  Auto-generated on 1/3/15.
+//  Auto-generated on 2/18/15.
 //  Copyright (c) 2015 Aurelius Prochazka. All rights reserved.
 //
 //  Implementation of Csound's dcblock:
@@ -24,7 +24,8 @@
     if (self) {
         _input = input;
         _gain = gain;
-    }
+        [self setUpConnections];
+}
     return self;
 }
 
@@ -35,6 +36,7 @@
         _input = input;
         // Default Values
         _gain = akp(0.99);
+        [self setUpConnections];
     }
     return self;
 }
@@ -44,23 +46,55 @@
     return [[AKDCBlock alloc] initWithInput:input];
 }
 
-- (void)setOptionalGain:(AKConstant *)gain {
+- (void)setGain:(AKConstant *)gain {
     _gain = gain;
+    [self setUpConnections];
 }
 
-- (NSString *)stringForCSD {
+- (void)setOptionalGain:(AKConstant *)gain {
+    [self setGain:gain];
+}
+
+
+- (void)setUpConnections
+{
+    self.state = @"connectable";
+    self.dependencies = @[_input, _gain];
+}
+
+- (NSString *)inlineStringForCSD
+{
+    NSMutableString *inlineCSDString = [[NSMutableString alloc] init];
+
+    [inlineCSDString appendString:@"dcblock("];
+    [inlineCSDString appendString:[self inputsString]];
+    [inlineCSDString appendString:@")"];
+
+    return inlineCSDString;
+}
+
+
+- (NSString *)stringForCSD
+{
     NSMutableString *csdString = [[NSMutableString alloc] init];
 
     [csdString appendFormat:@"%@ dcblock ", self];
+    [csdString appendString:[self inputsString]];
+    return csdString;
+}
 
+- (NSString *)inputsString {
+    NSMutableString *inputsString = [[NSMutableString alloc] init];
+
+    
     if ([_input class] == [AKAudio class]) {
-        [csdString appendFormat:@"%@, ", _input];
+        [inputsString appendFormat:@"%@, ", _input];
     } else {
-        [csdString appendFormat:@"AKAudio(%@), ", _input];
+        [inputsString appendFormat:@"AKAudio(%@), ", _input];
     }
 
-    [csdString appendFormat:@"%@", _gain];
-    return csdString;
+    [inputsString appendFormat:@"%@", _gain];
+    return inputsString;
 }
 
 @end

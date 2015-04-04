@@ -7,17 +7,16 @@
 //
 
 #import "AKAudioInput.h"
-#import "AKFoundation.h"
 
 @implementation AKAudioInput
 
 - (instancetype)init {
     self = [super initWithString:[self operationName]];
+    self.state = @"connectable";
     return self; 
 }
 
 - (NSString *)stringForCSD {
-    [[AKManager sharedManager] enableAudioInput];
     return [NSString stringWithFormat:@"%@, aUnused ins", self];
 }
 

@@ -2,7 +2,7 @@
 //  AKOscillator.m
 //  AudioKit
 //
-//  Auto-generated on 1/3/15.
+//  Auto-generated on 3/2/15.
 //  Copyright (c) 2015 Aurelius Prochazka. All rights reserved.
 //
 //  Implementation of Csound's oscili:
@@ -14,16 +14,17 @@
 
 @implementation AKOscillator
 
-- (instancetype)initWithFunctionTable:(AKFunctionTable *)functionTable
-                            frequency:(AKParameter *)frequency
-                            amplitude:(AKParameter *)amplitude
+- (instancetype)initWithWaveform:(AKTable *)waveform
+                       frequency:(AKParameter *)frequency
+                       amplitude:(AKParameter *)amplitude
 {
     self = [super initWithString:[self operationName]];
     if (self) {
-        _functionTable = functionTable;
+        _waveform = waveform;
         _frequency = frequency;
         _amplitude = amplitude;
-    }
+        [self setUpConnections];
+}
     return self;
 }
 
@@ -32,10 +33,11 @@
     self = [super initWithString:[self operationName]];
     if (self) {
         // Default Values
-        _functionTable = [AKManager standardSineWave];
+        _waveform = [AKTable standardSineWave];
     
         _frequency = akp(440);
         _amplitude = akp(1);
+        [self setUpConnections];
     }
     return self;
 }
@@ -45,31 +47,75 @@
     return [[AKOscillator alloc] init];
 }
 
-- (void)setOptionalFunctionTable:(AKFunctionTable *)functionTable {
-    _functionTable = functionTable;
-}
-- (void)setOptionalFrequency:(AKParameter *)frequency {
-    _frequency = frequency;
-}
-- (void)setOptionalAmplitude:(AKParameter *)amplitude {
-    _amplitude = amplitude;
+- (void)setWaveform:(AKTable *)waveform {
+    _waveform = waveform;
+    [self setUpConnections];
 }
 
-- (NSString *)stringForCSD {
+- (void)setOptionalWaveform:(AKTable *)waveform {
+    [self setWaveform:waveform];
+}
+
+- (void)setFrequency:(AKParameter *)frequency {
+    _frequency = frequency;
+    [self setUpConnections];
+}
+
+- (void)setOptionalFrequency:(AKParameter *)frequency {
+    [self setFrequency:frequency];
+}
+
+- (void)setAmplitude:(AKParameter *)amplitude {
+    _amplitude = amplitude;
+    [self setUpConnections];
+}
+
+- (void)setOptionalAmplitude:(AKParameter *)amplitude {
+    [self setAmplitude:amplitude];
+}
+
+
+- (void)setUpConnections
+{
+    self.state = @"connectable";
+    self.dependencies = @[_frequency, _amplitude];
+}
+
+- (NSString *)inlineStringForCSD
+{
+    NSMutableString *inlineCSDString = [[NSMutableString alloc] init];
+
+    [inlineCSDString appendString:@"oscili("];
+    [inlineCSDString appendString:[self inputsString]];
+    [inlineCSDString appendString:@")"];
+
+    return inlineCSDString;
+}
+
+
+- (NSString *)stringForCSD
+{
     NSMutableString *csdString = [[NSMutableString alloc] init];
+
+    [csdString appendFormat:@"%@ oscili ", self];
+    [csdString appendString:[self inputsString]];
+    return csdString;
+}
+
+- (NSString *)inputsString {
+    NSMutableString *inputsString = [[NSMutableString alloc] init];
 
     // Constant Values  
     AKConstant *_phase = akp(-1);        
-    [csdString appendFormat:@"%@ oscili ", self];
-
-    [csdString appendFormat:@"%@, ", _amplitude];
     
-    [csdString appendFormat:@"%@, ", _frequency];
+    [inputsString appendFormat:@"%@, ", _amplitude];
     
-    [csdString appendFormat:@"%@, ", _functionTable];
+    [inputsString appendFormat:@"%@, ", _frequency];
     
-    [csdString appendFormat:@"%@", _phase];
-    return csdString;
+    [inputsString appendFormat:@"%@, ", _waveform];
+    
+    [inputsString appendFormat:@"%@", _phase];
+    return inputsString;
 }
 
 @end

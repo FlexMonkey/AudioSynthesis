@@ -7,10 +7,8 @@
 //
 
 #import "AKParameter.h"
-#import "AKArray.h"
-#import "AKFunctionTable.h"
-#import "AKTypes.h"
-#import "AKSoundFile.h"
+#import "AKTable.h"
+#import "AKSoundFileTable.h"
 
 /** This category allows for operations to simply be considered as parameters to other operations.
  */
@@ -19,10 +17,15 @@
 /// The name of the class with the AK prefix.
 - (NSString *)operationName;
 
+//- (NSString *)state;
+
+// The opcode line for inclusion in instruments without giving it a name.
+- (NSString *)inlineStringForCSD;
+
 // The opcode line for inclusion in instruments.
 - (NSString *)stringForCSD;
 
 // The text of the User Defined Opcode
-- (NSString *)udoFile;
+- (NSString *)udoString;
 
 @end

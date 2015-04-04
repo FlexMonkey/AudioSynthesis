@@ -7,6 +7,11 @@
 //
 
 #import "AKParameter.h"
+#import "AKSum.h"
+#import "AKDifference.h"
+#import "AKProduct.h"
+#import "AKInverse.h"
+#import "AKSingleInputMathOperation.h"
 
 @implementation AKParameter
 
@@ -20,6 +25,8 @@ static int currentID = 1;
 {
     self = [super init];
     _myID = currentID++;
+    _state = @"unconnected";
+    _dependencies = @[];
     return self;
 }
 
@@ -133,57 +140,72 @@ static int currentID = 1;
     self.value = self.initialValue;
 }
 
-- (void)randomize;
+- (void)randomize
 {
     float width = self.maximum - self.minimum;
-    [self setValue:(((float) arc4random() / RAND_MAX) * width) + self.minimum];
+    float random = ((float)arc4random() / 0x100000000);
+    [self setValue:((random * width) + self.minimum)];
 }
 
+- (float)floatValue {
+    return _value;
+}
 
+- (void)setFloatValue:(float)floatValue {
+    self.value = floatValue;
+}
 // -----------------------------------------------------------------------------
 #  pragma mark - Helper Functions
 // -----------------------------------------------------------------------------
 
 - (instancetype)plus:(AKParameter *)additionalParameter
 {
-    AKParameter *new = [[AKParameter alloc] init];
-    [new setParameterString:[NSString stringWithFormat:@"((%@) + (%@))", self, additionalParameter]];
-    return new;
+    AKSum *sum = [[AKSum alloc] initWithFirstInput:self secondInput:additionalParameter];
+    return sum;
 }
 
-- (instancetype)minus:(AKParameter *)subtractedParameter
+- (instancetype)minus:(AKParameter *)subtrahend
 {
-    AKParameter *new = [[AKParameter alloc] init];
-    [new setParameterString:[NSString stringWithFormat:@"((%@) - (%@))", self, subtractedParameter]];
-    return new;
+    AKDifference *difference = [[AKDifference alloc] initWithInput:self minus:subtrahend];
+    return difference;
 }
 
 - (instancetype)scaledBy:(AKParameter *)scalingFactor
 {
-    AKParameter *new = [[AKParameter alloc] init];
-    [new setParameterString:[NSString stringWithFormat:@"((%@) * (%@))", self, scalingFactor]];
-    return new;
+    AKProduct *product = [[AKProduct alloc] initWithFirstInput:self secondInput:scalingFactor];
+    return product;
 }
 
 - (instancetype)dividedBy:(AKParameter *)divisor
 {
-    AKParameter *new = [[AKParameter alloc] init];
-    [new setParameterString:[NSString stringWithFormat:@"((%@) / (%@))", self, divisor]];
-    return new;
+    AKProduct *quotient = [[AKProduct alloc] initWithFirstInput:self secondInput:divisor.inverse];
+    return quotient;
 }
 
 - (instancetype)inverse
 {
-    AKParameter *new = [[AKParameter alloc] init];
-    [new setParameterString:[NSString stringWithFormat:@"(1/(%@))", self]];
-    return new;
+    AKInverse *inverse = [[AKInverse alloc] initWIthInput:self];
+    return inverse;
 }
 
-- (instancetype)amplitudeFromFullScaleDecibel;
+- (instancetype)mathWithOperation:(NSString *)operation
 {
-    AKParameter *new = [[AKParameter alloc] init];
-    [new setParameterString:[NSString stringWithFormat:@"ampdbfs(%@)", _parameterString]];
-    return new;
+    AKSingleInputMathOperation *output;
+    output = [[AKSingleInputMathOperation alloc] initWithFunctionString:operation input:self];
+    return output;
+}
+
+- (instancetype)floor          { return [self mathWithOperation:@"floor"]; }
+- (instancetype)round          { return [self mathWithOperation:@"round"]; }
+- (instancetype)fractionalPart { return [self mathWithOperation:@"frac"];  }
+
+- (instancetype)absoluteValue  { return [self mathWithOperation:@"abs"];   }
+- (instancetype)log            { return [self mathWithOperation:@"log"];   }
+- (instancetype)log10          { return [self mathWithOperation:@"log10"]; }
+- (instancetype)squareRoot     { return [self mathWithOperation:@"sqrt"];  }
+
+- (instancetype)amplitudeFromFullScaleDecibel {
+    return [self mathWithOperation:@"ampdbfs"];
 }
 
 
