@@ -148,6 +148,6 @@ class NumericDial: UIControl
     
     class func defaultLabelFunction(value : Float) -> String
     {
-        return NSString(format: "%.4f", value)
+        return NSString(format: "%.4f", value) as String
     }
 }

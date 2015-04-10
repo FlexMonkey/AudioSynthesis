@@ -148,18 +148,19 @@ class SineWaveRendererOperation: NSOperation
             previousCurveY = curveY
         }
         
-        finalImage = imageFromARGB32Bitmap(pixelArray, width: UInt(width), height: UInt(height))
+        finalImage = imageFromARGB32Bitmap(pixelArray, width: Int(width), height: Int(height))
     }
     
-    private func imageFromARGB32Bitmap(pixels:[PixelData], width:UInt, height:UInt)->UIImage
+    private func imageFromARGB32Bitmap(pixels:[PixelData], width:Int, height:Int)->UIImage
     {
-        let bitsPerComponent:UInt = 8
-        let bitsPerPixel:UInt = 32
+        let bitsPerComponent:Int = 8
+        let bitsPerPixel:Int = 32
         
         var data = pixels // Copy to mutable []
         let providerRef = CGDataProviderCreateWithCFData(NSData(bytes: &data, length: data.count * sizeof(PixelData)))
         
-        let cgim = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, width * UInt(sizeof(PixelData)), rgbColorSpace,	bitmapInfo, providerRef, nil, true, kCGRenderingIntentDefault)
+    let cgim = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, width * Int(sizeof(PixelData)), rgbColorSpace,	bitmapInfo, providerRef, nil, true, kCGRenderingIntentDefault)
+        
         
         return UIImage(CGImage: cgim)!;
     }
